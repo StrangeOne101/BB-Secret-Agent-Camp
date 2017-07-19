@@ -1,0 +1,259 @@
+/*
+ * Start Bootstrap - One Page Wonder (http://startbootstrap.com/)
+ * Copyright 2013-2016 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
+ */
+
+/*@font-face {
+    font-family: "Slick";
+    src: url(C:\xampp/htdocs/fonts/Slick.TTF) format("truetype");
+}*/
+
+body {
+    margin-top: 50px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+
+html, body {
+	background-color: #dedede;
+}
+
+.debug-hidden {
+	visibility: hidden;
+	display: none;
+}
+
+.invalid-entry {
+	color: red;
+	margin-right: 8px;
+	margin-left: 8px;
+	padding: 2px 2px 2px 2px;
+	text-shadow: none;
+	font-style: italic;
+}
+
+.glass {
+	border-radius: 30px;
+	background-color: rgba(128, 128, 128, 0.1);
+	padding: 20px 12px 20px 12px;
+}
+
+#register-form {
+	display: block;
+	left: auto;
+	right: auto;
+	padding: 20px 40px 0px 40px;
+	width: 1000px;
+	position: relative;
+	min-height: 600px;
+	margin-bottom: 100px;
+	color: #FFF;
+	text-shadow: 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+#register-form h3 {
+	color: #FFF;
+	font-size: 36px;
+}
+
+.header-image {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: url('/../img/Street_01.png') no-repeat center center scroll;
+    /**http://www.publicdomainpictures.net/pictures/100000/velka/purple-grey-background-texture.jpg
+    *
+    *
+    * C:\xampp/htdocs/img/Street_06.png*/
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    background-attachment: fixed;
+    margin-top: -50px;
+    padding: 80px;
+}
+
+/*#register-form > div.row > div.row > div.form-group > div {
+	padding-left: 0px;
+	padding-right: 0px;
+}*/
+
+.navbar {
+	background-color: rgba(40, 40, 40, 0.9);
+}
+
+.navbar-nav > li > a, a.navbar-brand {
+	color: #FFFFFF !important;
+}
+
+ul.navbar-nav a:hover, a.navbar-brand:hover {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.headline {
+    padding: 180px 0;
+    color: #FFF;
+    font-family: "Slick", "Avant Garde", "Avant Garde Gothic", "Century Gothic";
+}
+
+.headline h2 {
+    font-size: 92px;
+    text-shadow: 4px 4px rgba(0, 0, 0, 0.5);
+}
+
+.headline h3 {
+    font-size: 30px;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.9);
+}
+
+#register-form .form-group > h4 {
+	font-size: 28px;
+	margin-left: 12px;	
+}
+
+.featurette-divider {
+    margin: 80px 0;
+    border-color: #d0d0d0;
+}
+
+.featurette {
+    overflow: hidden;
+}
+
+.featurette-image {
+	width: 300px;
+}
+
+.featurette-image.pull-left {
+    margin-right: 40px;
+}
+
+.featurette-image.pull-right {
+    margin-left: 40px;
+}
+
+.featurette-heading {
+    font-size: 50px;
+}
+
+footer {
+    margin: 50px 0;
+}
+
+@media(max-width:1200px) {
+    .headline h1 {
+        font-size: 140px;
+    }
+
+    .headline h2 {
+        font-size: 63px;
+    }
+
+    .featurette-divider {
+        margin: 50px 0;
+    }
+
+    .featurette-image.pull-left {
+        margin-right: 20px;
+    }
+
+    .featurette-image.pull-right {
+        margin-left: 20px;
+    }
+
+    .featurette-heading {
+        font-size: 35px;
+    }
+}
+
+@media(max-width:991px) {
+    .headline h1 {
+        font-size: 105px;
+    }
+
+    .headline h2 {
+        font-size: 50px;
+    }
+
+    .featurette-divider {
+        margin: 40px 0;
+    }
+
+    .featurette-image {
+        max-width: 50%;
+    }
+
+    .featurette-image.pull-left {
+        margin-right: 10px;
+    }
+
+    .featurette-image.pull-right {
+        margin-left: 10px;
+    }
+
+    .featurette-heading {
+        font-size: 30px;
+    }
+}
+
+@media(max-width:768px) {
+    .container {
+        margin: 0 15px;
+    }
+
+    .featurette-divider {
+        margin: 40px 0;
+    }
+
+    .featurette-heading {
+        font-size: 25px;
+    }
+}
+
+@media(max-width:668px) {
+    .headline h1 {
+        font-size: 70px;
+    }
+
+    .headline h2 {
+        font-size: 32px;
+    }
+
+    .featurette-divider {
+        margin: 30px 0;
+    }
+}
+
+@media(max-width:640px) {
+    .headline {
+        padding: 75px 0 25px 0;
+    }
+
+    .headline h1 {
+        font-size: 60px;
+    }
+
+    .headline h2 {
+        font-size: 30px;
+    }
+}
+
+@media(max-width:375px) {
+    .featurette-divider {
+        margin: 10px 0;
+    }
+
+    .featurette-image {
+        max-width: 100%;
+    }
+
+    .featurette-image.pull-left {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .featurette-image.pull-right {
+        margin-bottom: 10px;
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,17 @@
+body {
+	margin: 50px 30px 50px 30px; 
+}
+
+html {
+	background-color: #FCFCFC;
+	
+}
+
+.docuement {
+	width: 800px auto;
+}
+
+.center {
+	margin: !auto;
+    width: !50%;
+}
