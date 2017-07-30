@@ -9,7 +9,7 @@ function sendParentEmail($email, $name, $refno) {
     $string = wordwrap($string, 70, "\r\n");
     
     $headers = "From: info@secretagentcamp.co.nz\r\nBcc: info@secretagentcamp.co.nz";
-    $subject = "Secert Agent Camp Registration";
+    $subject = "Secret Agent Camp Registration";
     
     mail($email, $subject, $string, $headers);
 }
@@ -21,7 +21,7 @@ function sendLeaderEmail($email, $name, $refo) {
     $string = wordwrap($string, 70, "\r\n");
     
     $headers = "From: info@secretagentcamp.co.nz\r\nBcc: info@secretagentcamp.co.nz";
-    $subject = "Secert Agent Camp Leader Registration";
+    $subject = "Secret Agent Camp Leader Registration";
     
     mail($email, $subject, $string, $headers);
 }
