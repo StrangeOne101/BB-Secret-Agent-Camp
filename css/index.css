@@ -14,6 +14,8 @@ html {
 	font-family: "Agency FB", "Verdana";
 	font-size: 28px;
 	margin: 0px !important;
+	min-height: 720px;
+	min-width: 1280px;
 }
 
 body {
@@ -39,7 +41,7 @@ body {
 
 
 
-h1, h2, h3, h4, h5 {
+h1, h2, h3, h4, h5, h6 {
 	text-align: center;
 	font-family: "Agency FB", "Verdana";
 	text-shadow: 2px 2px #060606;
@@ -56,6 +58,16 @@ h3 {
 
 h5 {
 	font-size: 24px;
+}
+
+h6#contact-us {
+	font-size: 16px;
+	position: absolute;
+	top: calc(100% - 20px);
+	left: calc(100% - 210px);
+	text-align: right;
+	width: 200px;
+	margin-right: 8px;
 }
 
 .center {

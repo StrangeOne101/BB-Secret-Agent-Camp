@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $secret = $_POST["secret"];
     
     
-    if (empty($secret) || $secret != "1883") {
+    if (empty($secret) || md5($secret) != "c45008212f7bdf6eab6050c2a564435a") {
         echo "Secret either empty or incorrect. Redirecting in 3 seconds...";
         header( "refresh:3;url=DBTesting.php" );
     } else {

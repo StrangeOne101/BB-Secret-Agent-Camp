@@ -1,22 +1,3 @@
-<?php 
-if(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "on" && $_SERVER["HTTP_HOST"] != "localhost")
-{
-    header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-    exit();
-}
-
-$start = "2017-08-18";
-
-//header("Location: register.php");
-
-$your_date = strtotime($start);
-$datediff = $your_date - time();
-
-$days = floor($datediff / (60 * 60 * 24));
-global $days;
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,13 +16,13 @@ global $days;
   	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
   	<meta http-equiv="pragma" content="no-cache" />
     
-    <title>Secret Agent Camp - Home</title>
+    <title>Secret Agent Camp - Thanks</title>
 
 	<!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--  <link href="css/bootstrap.min.css" rel="stylesheet">-->
 
     <!-- Custom CSS -->
-   	<link href="css/index.css" rel="stylesheet">
+   	<link href="css/thanks.css" rel="stylesheet">
    	
     <link rel="shortcut icon" href="favicon.ico">
     <script src="js/jquery-3.2.1.slim.min.js"></script>
@@ -56,14 +37,20 @@ global $days;
 </head>
 
 <body>
-
 	<div id="tile">
 		<div class="center" id="title_center">
-			<h3>Secret Agent Camp... Starting in</h3>
-			<h1 id="sac-timer"><?php echo $days?> Days</h1>
+			<h1>Thanks for registering!</h1>
+			<?php session_start();
 			
-			<input type="button" class="btn btn-large btn-lg" title="Register" value="Register Here!" onclick="document.location='/register.php'">
-			<h5>Registrations close on August 11th</h5>
+			if (isset($_SESSION["email"])) {
+			    //echo "You should recieve an email shortly.";
+			    echo "<h4>We've sent an email to <u>" . $_SESSION["email"] . "</u>. You should recieve it shortly.</h4>";
+			} 
+			else {
+			    echo "<h3>You should recieve an email about it shortly.</h3>";
+			}
+			?>
+			<h3>Want to register another child? Click <a href="/register.php" >here</a>.</h3>
 		</div>
 	</div>
 </body>

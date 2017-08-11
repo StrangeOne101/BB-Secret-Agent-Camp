@@ -4,26 +4,45 @@ if (!(isset($open) && $open)) {
     exit;
 }
 function sendParentEmail($email, $name, $refno) {
-    $string = "This message shouldn't be blank.";
+    $string = "Thanks for registering $name for Secret Agent Camp.\n\nPlease ensure the $60 camp fee is paid before 11 " .
+    "August 2017 to Confirm registration.\n\nDue: $60.00\nAccount Number: 03 0855 0359326 01 \nReference: $refno" .
+    "\nCode: 221\n\nLooking forward to seeing $name at camp, its going to be a fantastic weekend.\nIf you have any " .
+    "questions please contact your Boys' Brigade / ICONZ leader or the Camp team at info@secretagentcamp.co.nz\n\nKind " .
+    "Regards,\nThe Secret Agent Camp Team";
     
-    $string = wordwrap($string, 70, "\r\n");
+    $newstring = "";
+    
+    foreach (explode("\n", $string) as $s) {
+        wordwrap($s, 70, "\n");
+        
+        $newstring .= $s . "\n";
+    }
     
     $headers = "From: info@secretagentcamp.co.nz\r\nBcc: info@secretagentcamp.co.nz";
     $subject = "Secret Agent Camp Registration";
     
-    mail($email, $subject, $string, $headers);
+    mail($email, $subject, $newstring, $headers);
 }
 
-function sendLeaderEmail($email, $name, $refo) {
-    $string = "Thanks for signing up for Secret Agent Camp! We appreciate you joining us.\n\nThe cost for leaders is just $10.\nIf you " .
-    "could deposit the money in xxxxxxxxxxxxxxxxxxx, along with the reference number $refo, that'd be great.\n\nThanks,\nThe Secret Agent Camp Team";
+function sendLeaderEmail($email, $name, $refno) {
+    $string = "Thanks $name for registering as a leader for Secret Agent Camp.\n\nPlease ensure the $45 leaders camp fee" .
+    "is paid before 11 August 2017 to Confirm registration.\n\nDue: $45.00\nAccount Number: 03 0855 0359326 01 \nReference:" .
+    "$refno\nCode: 221\n\nLooking forward to seeing you at camp, its going to be a fantastic weekend.\nIf you have " .
+    "any questions please contact the Camp team at info@secretagentcamp.co.nz or David Blackler on 021 182 4677.\n\nKind Regards," .
+    "\nThe Secret Agent Camp Team";
     
-    $string = wordwrap($string, 70, "\r\n");
+    $newstring = "";
+    
+    foreach (explode("\n", $string) as $s) {
+        wordwrap($s, 70, "\n");
+        
+        $newstring .= $s . "\n";
+    }
     
     $headers = "From: info@secretagentcamp.co.nz\r\nBcc: info@secretagentcamp.co.nz";
     $subject = "Secret Agent Camp Leader Registration";
     
-    mail($email, $subject, $string, $headers);
+    mail($email, $subject, $newstring, $headers);
 }
 
 function sendErrorEmail($data, $error) {

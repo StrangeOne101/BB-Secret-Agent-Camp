@@ -17,7 +17,16 @@ $(document).ready(function() {
 	
 	$(".invalid-phone").change(function() {
 		(".invalid-phone").removeClass("invalid-company");
-	});
+	}); 
+	
+    if (!Modernizr.inputtypes.date) {
+    	console.log("Running on firefox!");
+        $('input[type=date]').datepicker({
+        	dateFormat : 'yy-mm-dd'
+        });
+    } else {
+    	console.log("Running on another browser!");
+    }
 });
 
 function submitForm() {

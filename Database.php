@@ -21,15 +21,16 @@ $companies[5] = "8th Christchurch";
 $companies[6] = "14th Christchurch";
 $companies[7] = "1st Rangiora";
 $companies[8] = "2st Rangiora";
-$companies[9] = "1st Waimate";
-$companies[10] = "Hornby ICONZ";
-$companies[11] = "Lincoln ICONZ";
-$companies[12] = "Oxford ICONZ";
-$companies[13] = "Richmond ICONZ";
-$companies[14] = "St Albans ICONZ";
-$companies[15] = "Parklands ICONZ";
-$companies[16] = "Westside ICONZ";
-$companies[17] = "Other";
+$companies[9] = "3rd Timaru";
+$companies[10] = "1st Waimate";
+$companies[11] = "Hornby ICONZ";
+$companies[12] = "Lincoln ICONZ";
+$companies[13] = "Oxford ICONZ";
+$companies[14] = "Richmond ICONZ";
+$companies[15] = "St Albans ICONZ";
+$companies[16] = "Parklands ICONZ";
+$companies[17] = "Westside ICONZ";
+$companies[18] = "Other";
 
 $GLOBALS["companies"] = $companies;
 
@@ -132,6 +133,7 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
 		$fname = implode(explode(" ", $name, -1));
 		
 		$date = date("Y-m-d");
+		$newdob = date("Y-m-d", strtotime($dob));
 		
 		$addresstotal = str_replace("\n", ",", $address) . ", " . $postcode;
 		
@@ -151,8 +153,19 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
 		
 		$companystring = $GLOBALS['companies'][$company];
 		
+		$fname = $conn->real_escape_string($fname);
+		$lname = $conn->real_escape_string($lname);
+		$addresstotal = $conn->real_escape_string($addresstotal);
+		$food = $conn->real_escape_string($food);
+		$ecname = $conn->real_escape_string($ecname);
+		$ecphone = $conn->real_escape_string($ecphone);
+		$medical = $conn->real_escape_string($medical);
+		$phone = $conn->real_escape_string($phone);
+		$phonemobile = $conn->real_escape_string($phonemobile);
+		$email = $conn->real_escape_string($email);
+		
 		$insertSQL = "INSERT INTO $table (FirstName, LastName, DOB, Email, Address, Phone, MobilePhone, CompanyUnit, ContactName, ContactPhone," . 
-		"MedicalDetails, FoodDetails, RegisteeType, RefNo, AgentID, DateRegistered) VALUES ('$fname', '$lname', '$dob', '$email'," . 
+		"MedicalDetails, FoodDetails, RegisteeType, RefNo, AgentID, DateRegistered) VALUES ('$fname', '$lname', '$newdob', '$email'," . 
 		"'$addresstotal', '$phone', '$phonemobile', $company, '$ecname', '$ecphone', '$medical', '$food', $registertype, '$refno', '$agentID', '$date');";
 		
 		$checkSQL = "SELECT RefNo FROM $table WHERE EXISTS(SELECT * FROM $table WHERE RefNo = '$refno')";
@@ -183,7 +196,7 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
 		} else {
 		    debug("Failed to insert: " . $conn->error);
 		    
-		    $data = "FirstName: $fname\r\n" . "LastName: $lname\r\n" . "DOB: $dob\r\n" . "Email: $email\r\n" . "Address: $address\r\n"
+		    $data = "FirstName: $fname\r\n" . "LastName: $lname\r\n" . "DOB: $dob\r\n" . "Email: $email\r\n" . "Address: $addresstotal\r\n"
 		    . "Phone: $phone\r\n" . "MobilePhone: $phonemobile\r\n" . "Company (int): $company\r\n" . "Company: $companystring\r\n"
 		    . "ContactName: $ecname\r\n" . "ContactPhone: $ecphone\r\n" . "Medical Details: $medical\r\n" . "Food Details: $food\r\n"
 		    . "Leader: " . ($registertype == 1 ? "True" : "False") . " ($registertype)\r\n" . "RefNo: $refno\r\n" . "AgentID: $agentID\r\n"
@@ -196,10 +209,5 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
 	} catch (PDOException $e) {
 	    debug("Failed with exception: " . $e->getMessage());
 	}
-	
-	
-	
-	
-	
 }
 ?>

@@ -48,7 +48,7 @@ textarea.form {
 	padding-bottom: 30px;
 }
 
-.invalid, .invalid-email, .invalid-name, .invalid-company, .invalid-phone {
+.invalid, .invalid-email, .invalid-name, .invalid-company, .invalid-phone, .invalid-date {
 	background-color: rgba(255, 0, 0, 0.1) !important;
 }
 
@@ -104,7 +104,7 @@ textarea.form {
 #form-company {
 	margin-left: 306px;
 	margin-top: 721px;
-	width: 300px;
+	width: 310px;
 	height: 25px;
 }
 

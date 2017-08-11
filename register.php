@@ -2,6 +2,13 @@
 <html lang="en">
 
 <?php 
+
+if($_SERVER["HTTPS"] != "on")
+{
+    header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+    exit();
+}
+
 $open = true;
 global $open;
 
@@ -185,55 +192,56 @@ function checkCaptcha($key) {
         	<!-- <img id="register_img" src="../img/register.png">-->
         	<form id="register_form_form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
         		<div class="form-group">
-	        	<input id="form-firstname" <?php validate($name, 2)?> name="name" placeholder="John Smith" type="text" maxlength="40" value="<?php echo $name?>">
-	        	<!--  <?php validate(1)?>
-	        	<input id="form-lastname" class="form" name="lname" placeholder="Smith" type="text" value="">
-				-->
-				<input id="form-agentID" class="form" disabled name="agentid" type="text" maxlength="5" value="<?php echo $agentID?>">
+    	        	<input id="form-firstname" <?php validate($name, 2)?> name="name" placeholder="John Smith" type="text" maxlength="40" value="<?php echo $name?>">
+    	        	<!--  <?php validate(1)?>
+    	        	<input id="form-lastname" class="form" name="lname" placeholder="Smith" type="text" value="">
+    				-->
+    				<input id="form-agentID" class="form" disabled name="agentid" type="text" maxlength="5" value="<?php echo $agentID?>">
+    	        	
+    	        	<select id="form-company" <?php validate($company, 3)?> name="company"  value="<?php echo $company?>">
+    		        	<option value="0" disabled selected>** Please Select **</option>
+    		        	<?php         							
+    		        		for($i = 0; $i < count($GLOBALS["companies"]); $i++) {
+    		        			$ii = $i + 1;
+    		        			echo "<option value='$ii' " . ($company == $ii ? "selected" : "") . ">" . $GLOBALS["companies"][$i] . "</option>";
+    		        		}
+    		        		?>
+    	        	</select>
+    	        	
+    	        	<input id="form-officer" class="form" type="checkbox" value="1" name="officer" <?php if ($officer == 1) echo "checked" ?>>
+    	        	
+    	        	<input id="form-dob" <?php validate($dob)?> name="dateofbirth" placeholder="dd/mm/yyyy" value="<?php echo $dob?>" type="date">
+    				
+    	        	<input id="form-email" <?php validate($email, 1)?> name="email" placeholder="example@domain.com" type="text" maxlength="50" value="<?php echo $email?>">
+    	        	<input id="form-phone" <?php validate($phone)?> name="phone" type="text" value="<?php echo $phone?>" maxlength="15">
+    	        	<input id="form-phonemobile" <?php validate($phonemobile)?> name="phonemobile" type="text" value="<?php echo $phonemobile?>" maxlength="15">
+    	        	
+    	        	<textarea cols="3" id="form-address" <?php validate($address)?>  name="address" placeholder="99 Example Drive" maxlength="60" type="text"><?php echo $address?></textarea>
+    	        	
+    	        	<input id="form-postcode" <?php validate($postcode)?> name="postcode" placeholder="0000" max="9999" maxlength="4" type="number" value="<?php echo $postcode?>">
+    	        	
+    	        	<textarea id="form-medical" <?php validate("-")?>  name="medical" placeholder="" maxlength="1024" type="text"><?php echo $medical?></textarea>
+    	        	<textarea id="form-food" <?php validate("-")?>  name="food" placeholder="" maxlength="512" type="text"><?php echo $food?></textarea>
+    	        	
+    	        	<input id="form-ecname" <?php validate($ecname)?> placeholder="Mr. Smith" name="ecname" maxlength="20" type="text" value="<?php echo $ecname?>">
+    	        	<input id="form-ecphone" <?php validate($ecphone)?> name="ecphone" type="text" maxlength="15" value="<?php echo $ecphone?>">
+    	        	
+    	        	<?php if ($validating) { //The form isn't valid still, or we will have been redirected
+    	        		echo "<span id='form-invalid'>Please fill out all the fields marked in red, then try again.</span>";
+    	        	}
+    	        	
+    	        	if (!$captchaValid) { //The captcha failed to verify them
+    	        	    echo "<span id='form-invalid'>The captcha failed to verify you. Please try submitting again.</span>";
+    	        	}
+    	        	?>
+    	        	
+    	        	<!-- The button that is for the re-captcha -->
+    	        	<button id="re-captcha--" class="g-recaptcha" data-sitekey="6LeZUCkUAAAAALIvQt51RFJhAZt2upmJo2tNApqz" data-callback="submitForm"> Submit </button>
 	        	
-	        	<select id="form-company" <?php validate($company, 3)?> name="company"  value="<?php echo $company?>">
-		        	<option value="0" disabled selected>** Please Select **</option>
-		        	<?php         							
-		        		for($i = 0; $i < count($GLOBALS["companies"]); $i++) {
-		        			$ii = $i + 1;
-		        			echo "<option value='$ii' " . ($company == $ii ? "selected" : "") . ">" . $GLOBALS["companies"][$i] . "</option>";
-		        		}
-		        		?>
-	        	</select>
-	        	
-	        	<input id="form-officer" class="form" type="checkbox" value="1" name="officer" <?php if ($officer == 1) echo "checked" ?>>
-	        	
-	        	<input id="form-dob" <?php validate($dob)?> name="dateofbirth" value="<?php echo $dob?>" type="date">
-				
-	        	<input id="form-email" <?php validate($email, 1)?> name="email" placeholder="example@domain.com" type="text" maxlength="50" value="<?php echo $email?>">
-	        	<input id="form-phone" <?php validate($phone)?> name="phone" type="text" value="<?php echo $phone?>" maxlength="15">
-	        	<input id="form-phonemobile" <?php validate($phonemobile)?> name="phonemobile" type="text" value="<?php echo $phonemobile?>" maxlength="15">
-	        	
-	        	<textarea cols="3" id="form-address" <?php validate($address)?>  name="address" placeholder="99 Example Drive" maxlength="60" type="text"><?php echo $address?></textarea>
-	        	
-	        	<input id="form-postcode" <?php validate($postcode)?> name="postcode" placeholder="0000" max="9999" maxlength="4" type="number" value="<?php echo $postcode?>">
-	        	
-	        	<textarea id="form-medical" <?php validate("-")?>  name="medical" placeholder="" maxlength="1024" type="text"><?php echo $medical?></textarea>
-	        	<textarea id="form-food" <?php validate("-")?>  name="food" placeholder="" maxlength="512" type="text"><?php echo $food?></textarea>
-	        	
-	        	<input id="form-ecname" <?php validate($ecname)?> placeholder="Mr. Smith" name="ecname" maxlength="20" type="text" value="<?php echo $ecname?>">
-	        	<input id="form-ecphone" <?php validate($ecphone)?> name="ecphone" type="text" maxlength="15" value="<?php echo $ecphone?>">
-	        	
-	        	<?php if ($validating) { //The form isn't valid still, or we will have been redirected
-	        		echo "<span id='form-invalid'>Please fill out all the fields marked in red, then try again.</span>";
-	        	}
-	        	
-	        	if (!$captchaValid) { //The captcha failed to verify them
-	        	    echo "<span id='form-invalid'>The captcha failed to verify you. Please try submitting again.</span>";
-	        	}
-	        	?>
-	        	
-	        	<!-- The button that is for the re-captcha -->
-	        	<button id="re-captcha--" class="g-recaptcha" data-sitekey="6LeZUCkUAAAAALIvQt51RFJhAZt2upmJo2tNApqz" data-callback="submitForm"> Submit </button>
-	        	
-	        	
+	        	</div>
         	</form>
         		<!--</div>-->
+        
        
     </div>
      <!-- Page Content -->
