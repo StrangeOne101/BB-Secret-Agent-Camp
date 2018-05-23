@@ -5,23 +5,21 @@
 }
 
 #tile {
-	
 	width: 100%;
-	height: 100%;
 }
 
 html {
 	font-family: "Agency FB", "Verdana";
 	font-size: 28px;
 	margin: 0px !important;
-	min-height: 720px;
+	min-height: 700px;
 	min-width: 1280px;
 }
 
 body {
-	background: url("../img/lamp.jpg") no-repeat;
+	background: url("../img/stars.png") no-repeat;
 	background-size: 100%;
-	
+	height: 100%;
 }
 
 #title_center {
@@ -36,7 +34,6 @@ body {
 	vertical-align: middle;
 	
 	padding-top: 10%;
-	padding-bottom: 10%;
 }
 
 
@@ -75,7 +72,7 @@ h6#contact-us {
 	margin: 0 auto;
 }
 
-.btn-large {
+#register-btn {
 	width: 800px;
 	height: 120px;
 	border: 8px solid #F0F0F0;
@@ -86,9 +83,19 @@ h6#contact-us {
 	font-family: "Agency FB", "Verdana";
 }
 
-.btn-large:hover, .btn-large:active {
+#register-btn:hover, #register-btn:active {
 	color: #FF0000;
 	border: 8px solid #FF0000;
 	text-shadow: 1px 1px #060606;
 }
 
+.debug {
+	color: #F0F0F0;
+	padding: 4px 4px 4px 4px;
+}
+
+.admin-buttons {
+	float: right;
+	display: inline-block;
+	padding: 8px 8px 8px 8px;
+}

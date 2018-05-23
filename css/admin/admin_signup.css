@@ -1,0 +1,18 @@
+#adminSignup {
+    margin: 0px 0px 50px 0px;
+    padding: 0px;
+}
+
+.left-label {
+    float: left;
+    margin-left: 4px;
+
+}
+
+.pad-right {
+    margin-right: 4px;
+}
+
+.pad-left {
+    margin-left: 4px;
+}

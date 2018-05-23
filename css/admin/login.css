@@ -1,0 +1,15 @@
+body {
+	background-color: #FAFAFA;
+}
+
+.left-label {
+	float: left;
+	margin-left: 4px;
+	
+}
+
+.text-muted {
+	margin-top: 4px;
+	float: left;
+	margin-bottom: 40px;
+}

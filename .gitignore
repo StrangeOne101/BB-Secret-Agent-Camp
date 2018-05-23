@@ -61,3 +61,13 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+#IDEA
+.idea/*
+
+.settings/*
+.idea/php.xml
+
+#Admin Stuff
+admin/ARCHIVE/*
+.idea/php.xml

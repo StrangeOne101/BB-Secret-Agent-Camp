@@ -4,8 +4,26 @@ if(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "on" && $_SERVER["HTTP_HOST"
     header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
     exit();
 }
+$open = true;
+global $open;
 
-$start = "2017-08-18";
+include("scripts/debug.php");
+
+$loggedIn = false;
+$user = "";
+$priv = 0;
+
+session_start();
+
+if(isset($_SESSION['username'])){
+    $loggedIn = true;
+    $user = $_SESSION['username'];
+    //$priv = $_SESSION['permissions'];
+} else {
+    
+}
+
+$start = "2018-08-18";
 
 //header("Location: register.php");
 
@@ -35,17 +53,18 @@ global $days;
   	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
   	<meta http-equiv="pragma" content="no-cache" />
     
-    <title>Secret Agent Camp - Home</title>
+    <title>Space Camp - Home</title>
 
 	<!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
    	<link href="css/index.css" rel="stylesheet">
    	
     <link rel="shortcut icon" href="favicon.ico">
-    <script src="js/jquery-3.2.1.slim.min.js"></script>
-    <!--<script src="js/bootstrap.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/debug.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -59,12 +78,21 @@ global $days;
 
 	<div id="tile">
 		<div class="center" id="title_center">
-			<h3>Secret Agent Camp... Starting in</h3>
+			<h3>Space Camp... Lift Off In...</h3>
 			<h1 id="sac-timer"><?php echo $days?> Days</h1>
 			
-			<input type="button" class="btn btn-large btn-lg" title="Register" value="Register Here!" onclick="document.location='/register.php'">
+			<input id="register-btn" type="button" class="btn btn-large btn-lg" title="Register" value="Register Here!" onclick="document.location='/register.php'">
 			<h5>Registrations close on August 11th</h5>
+			
 		</div>
+		<div class="admin-buttons"><form action="/admin"><input type="submit" class="btn btn-large btn-danger" value="Admin Panel"/></form></div>
 	</div>
+	<?php 
+	/*if ($loggedIn) {
+	    echo "<span class='administrate'>Admin Panel</span>";
+	} else {
+	    debug("No session!");
+	}*/
+	?>
 </body>
 </html>

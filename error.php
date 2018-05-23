@@ -16,7 +16,7 @@
   	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
   	<meta http-equiv="pragma" content="no-cache" />
     
-    <title>Secret Agent Camp - Error</title>
+    <title>Space Camp - Error</title>
 
 	<!-- Bootstrap Core CSS -->
     <!--  <link href="css/bootstrap.min.css" rel="stylesheet">-->
@@ -41,7 +41,7 @@
 		<div class="center" id="title_center">
 			<h1>An error occured while registering!</h1>
 			<h3>Sorry about that! However, if you can see this message, please 
-			<a href="mailto:info@secretagentcamp.co.nz?Subject=Site%20Issues">contact us</a> and let us know ASAP!</h3>
+			<a href="mailto:info@bbspacecamp.co.nz?Subject=Site%20Issues">contact us</a> and let us know ASAP!</h3>
 		</div>
 	</div>
 </body>

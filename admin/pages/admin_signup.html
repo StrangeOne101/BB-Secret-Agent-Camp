@@ -1,0 +1,56 @@
+<h2>Admin Registration</h2>
+<p>This page is for creating additional site admins.</p>
+<p>On submission, the recipient will receive an email inviting them to the page. They must accept this within 24 hours.</p>
+<div id="adminSignup" class="container" align="center">
+    <div class="row">
+        <form method="post" action="createLogin.php" class="col col-lg-6 row justify-content no-gutters">
+            <div class="col col-lg-6">
+                <div class="form-group pad-right">
+                    <label for="adminRegister_firstname" class="left-label">First Name</label>
+                    <input name="firstname" type="text" class="form-control" id="adminRegister_firstname" placeholder="John" value="">
+                </div>
+            </div>
+            <div class="col col-lg-6">
+                <div class="form-group pad-left">
+                    <label for="adminRegister_lastname" class="left-label">Last Name</label>
+                    <input name="lastname" type="text" class="form-control" id="adminRegister_lastname" placeholder="Doe" value="">
+                </div>
+            </div>
+            <div class="col col-lg-9">
+                <div class="form-group pad-right">
+                    <label for="adminRegister_email" class="left-label">Email address</label>
+                    <input name="email" type="email" class="form-control" id="adminRegister_email" placeholder="Enter email" value="">
+                </div>
+            </div>
+            <div class="col col-lg-3">
+                <div class="form-group pad-left">
+                    <label for="adminRegister_perm" class="left-label">Permission Level</label>
+                    <input name="permissionlevel" type="number" min="0" max="128" class="form-control" id="adminRegister_perm" aria-describedby="warning" value="64">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Send Invite</button>
+
+            <div class="modal fade" id="adminRegister_alert" tabindex="-1" role="dialog" aria-labelledby="adminRegister_alert_title" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="adminRegister_alert_title">Admin Invite Sent!</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Please ask the user to check their emails. They will have received an invite.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<h4>Current Registered Users</h4>
+<div id="tableWrapper_db_registeredAdminUsers" class="dbtable"></div>

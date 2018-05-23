@@ -149,7 +149,7 @@ function checkCaptcha($key) {
 	<meta name="robots" content="noindex">
     <meta name="googlebot" content="noindex">
     
-    <title>Secret Agent Camp - Register</title>
+    <title>Space Camp - Register</title>
 
     <!-- Bootstrap Core CSS -->
     <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
@@ -185,7 +185,7 @@ function checkCaptcha($key) {
 </head>
 
 <body>
-		<h1>Register for Secret Agent Camp</h3>
+		<h1>Register for Space Camp</h1>
         <div id="register-form">
         	<!--  <div class="offset-xl-3 col-xl-6 offset-lg-3 col-lg-6 offset-md-1 col-md-10">-->
         	
