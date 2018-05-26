@@ -95,7 +95,16 @@ h6#contact-us {
 }
 
 .admin-buttons {
-	float: right;
+	bottom: 0em;
+	right: 0em;
 	display: inline-block;
+	position: fixed;
 	padding: 8px 8px 8px 8px;
+}
+
+.invisible {
+	background-color: transparent;
+	border-color: transparent;
+	color: transparent;
+	visibility: visible;
 }

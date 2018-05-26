@@ -85,7 +85,7 @@ global $days;
 			<h5>Registrations close on August 11th</h5>
 			
 		</div>
-		<div class="admin-buttons"><form action="/admin"><input type="submit" class="btn btn-large btn-danger" value="Admin Panel"/></form></div>
+		<div class="admin-buttons"><form action="/admin"><input type="submit" class="btn btn-large btn-danger invisible" value="Admin Panel"/></form></div>
 	</div>
 	<?php 
 	/*if ($loggedIn) {

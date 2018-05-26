@@ -25,14 +25,14 @@ $TABLE_PAYMENTS = "tbl_payments"; //Payments and ID of all owing or payed camper
  * @return string The error message, or blank if it is ready
  */
 function isDBDataReady() {
-    $ini_array = parse_ini_file("../admin/config/database.ini");
-    
+    $ini_array = parse_ini_file("../../config/database.ini");
+
     if (!isset($ini_array["port"])) {
         $ini_array["port"] = 1443;
     }
-    
+
     $return = "";
-    
+
     if (!isset($ini_array["hostname"])) {
         $return .= "Hostname not found;";
     }
@@ -42,7 +42,7 @@ function isDBDataReady() {
     if (!isset($ini_array["databasename"])) {
         $return .= "Database name not found;";
     }
-    
+
     return $return;
 }
 
@@ -60,10 +60,10 @@ function tableExists($tablename) {
 
 if (isDBDataReady() == "" && $database == null) { //If there are no issues AND the database has not been connected to yet
     try {
-        $ini_array = parse_ini_file("../admin/config/database.ini"); //Read ini file
-        $database = new mysqli($ini_array["hostname"], $ini_array["username"], 
+        $ini_array = parse_ini_file("../../config/database.ini"); //Read ini file
+        $database = new mysqli($ini_array["hostname"], $ini_array["username"],
             $ini_array["password"], $ini_array["databasename"]); //Create new DB instance
-        
+
         if ($database->connect_error) {
             debug("Database failed to connect: " . $database->connect_error);
             $database = null; //Set it back to null so we can attempt a connection again whenever another lib imports this DB script
@@ -97,7 +97,7 @@ if (isDBDataReady() == "" && $database == null) { //If there are no issues AND t
                 $query = "CREATE TABLE $TABLE_COMPANIES (`CompanyID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `CompanyName` VARCHAR(40), `PayingAsCompany` BOOLEAN DEFAULT FALSE)";
                 $database->query($query);
                 $query = "INSERT INTO $TABLE_COMPANIES (`CompanyName`) VALUES ('1st Ashburton'), ('1st Blenheim'), ('1st Christchurch'), ('2nd Christchurch'), ('4th Christchurch'), ('8th Christchurch'), ('14th Christchurch'), ('1st Rangiora'), ('2st Rangiora'), "
-                . "('3rd Timaru'), ('1st Waimate'), ('Hornby ICONZ'), ('Lincoln ICONZ'), ('Oxford ICONZ'), ('Richmond ICONZ'), ('St Albans ICONZ'), ('Parklands ICONZ'), ('Westside ICONZ')";
+                    . "('3rd Timaru'), ('1st Waimate'), ('Hornby ICONZ'), ('Lincoln ICONZ'), ('Oxford ICONZ'), ('Richmond ICONZ'), ('St Albans ICONZ'), ('Parklands ICONZ'), ('Westside ICONZ')";
                 $database->query($query);
                 $query = "INSERT INTO $TABLE_COMPANIES (`CompanyID`, `CompanyName`) VALUES (99, 'Other')";
                 $database->query($query);
@@ -130,7 +130,7 @@ if (isDBDataReady() == "" && $database == null) { //If there are no issues AND t
             }
 
         }
-        
+
         global $database;
         $GLOBALS["database"] = $database; //Make the database variable global so other modules can use it
     } catch (PDOException $e) {
@@ -157,7 +157,7 @@ function isValidLogin($email, $password) {
     global $database, $TABLE_LOGINS;
     $email = $database->real_escape_string(strtolower($email)); //Prevent SQL injections
     // $password = $database->real_escape_string(password_hash($password, PASSWORD_DEFAULT)); //Hash password then encode all sql chars
-    
+
     $query = "SELECT `Password` FROM $TABLE_LOGINS WHERE `Email` = '$email'";
     $result = $database->query($query);
     if ($result) {
@@ -189,22 +189,22 @@ function isValidToken($token) {
 }
 
 /**
- * Return the permission level of the given user. 
+ * Return the permission level of the given user.
  * @param string $email The username of the user
  * @return number The permission. Between 0 and 255, or -1 if not found.
  */
 function getPermission($email) {
     global $database, $TABLE_LOGINS;
     $email = $database->real_escape_string(strtolower($email));
-    
+
     $query = "SELECT Permissions FROM $TABLE_LOGINS WHERE `Email` = '$email'";
     $result = $database->query($query);
-    
+
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         return intval($row["Permissions"]);
     } else {
-        return -1; 
+        return -1;
     }
 }
 
@@ -216,16 +216,34 @@ function getPermission($email) {
 function getName($email) {
     global $database, $TABLE_LOGINS;
     $email = $database->real_escape_string(strtolower($email));
-    
+
     $query = "SELECT `FirstName`, `LastName` FROM $TABLE_LOGINS WHERE `Email` = '$email'";
     $result = $database->query($query);
-    
+
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         return array($row["FirstName"], $row["LastName"]);
     } else {
         return null;
     }
+}
+
+/**
+ * Checks if the passed token is valid or not, and if it is, return the
+ * query that it can use. Returns null otherwise.
+ * @param string $token The token
+ * @return The query, or null
+ */
+function getQueryFromToken($token) {
+    global $database, $TABLE_LOGINS, $TABLE_TOKENS;
+
+    $token = $database->real_escape_string($token); //To prevent SQL injections
+    $query = "SELECT $TABLE_TOKENS.Query FROM `$TABLE_TOKENS` INNER JOIN `$TABLE_LOGINS` ON $TABLE_TOKENS.UserID = $TABLE_LOGINS.UserID WHERE $TABLE_LOGINS.Password = \"$token\"";
+    $result = $database->query($query);
+    if ($result->num_rows > 0) {
+        return $result->fetch_assoc()["Query"];
+    }
+    return null;
 }
 
 /**
@@ -248,7 +266,7 @@ function getLastError() {
 }
 
 /**
- * Creates a new login. 
+ * Creates a new login.
  * @param string $email The username
  * @param string $password The password. Should not be pre-hashed.
  * @param string $firstname The user's first name
@@ -258,13 +276,13 @@ function getLastError() {
  */
 function createLogin($email, $password, $firstname, $lastname, $perms) {
     global $database, $TABLE_LOGINS;
-    
+
     $email = $database->real_escape_string(strtolower($email)); //Prevent SQL injections
     $password = $database->real_escape_string(password_hash($password, PASSWORD_DEFAULT)); //Hash password then encode all sql chars
     $firstname = $database->real_escape_string($firstname);
     $lastname = $database->real_escape_string($lastname);
     $query = "INSERT INTO $TABLE_LOGINS (`Email`, `Password`, `FirstName`, `LastName`, `Permission`) VALUES ('$email', '$password', '$firstname', '$lastname', $perms)";
-    
+
     if ($database->query($query)) return true;
     else {
         debug("Failed to create login: " . $database->error);
