@@ -35,19 +35,27 @@ $expiry;
 function checkToken($token) {
     global $database, $TABLE_LOGINS_PENDING, $verified, $name, $email, $permission, $password, $expiry;
 
-    $query = "SELECT * FROM $TABLE_LOGINS_PENDING WHERE Token = \"" . $token . "\"";
-    $result = $database->query($query);
-    if (!($result && $result->num_rows > 0)) { //If there was no result
-        $name = $result->fetch_assoc()["FirstName"];
-        $email = $result->fetch_assoc()["Email"];
-        $permission = $result->fetch_assoc()["Permission"];
-        $expiry = strtotime($result->fetch_assoc()["Expiry"]);
+    $token = $database->real_escape_string($token);
 
-        if ($expiry <= time()) { //If the expiry hasn't expired yet
+    $query = "SELECT * FROM $TABLE_LOGINS_PENDING WHERE `Token` = \"$token\"";
+    $result = $database->query($query);
+    if ($result && $result->num_rows > 0) { //If there is a return
+        $row = $result->fetch_assoc();
+        $name = $row["FirstName"];
+        $email = $row["Email"];
+        $permission = $row["Permission"];
+        $expiry = $row["Expiry"];
+
+        if (strtotime($expiry) >= time()) { //If the expiry hasn't expired yet
             $verified = true;
+            session_start();
+            $_SESSION["token"] = $token; //This allows the server to see that the POST request we send when setting
+                                         //the password is from the same person that accessed the token
         }
     }
 }
+
+checkToken($token);
 ?>
 
 <!DOCTYPE HTML>

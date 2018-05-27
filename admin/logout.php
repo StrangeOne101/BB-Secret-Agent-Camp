@@ -12,7 +12,7 @@ include("../scripts/debug.php");
 
 session_start();
 
-if ($_SESSION["username"]) {
+if ($_SESSION["email"]) {
     session_destroy();
 
     session_start();

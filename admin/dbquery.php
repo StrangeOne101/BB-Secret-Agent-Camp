@@ -28,6 +28,8 @@ $debugVal = false; //So debug doesn't echo
 
 include("../scripts/database.php");
 
+global $database;
+
 if (!isReady()) { //The database isn't functioning
     echo "<h4>Error: The database isn't functioning right now! No data can be read.</h4>";
     return;
@@ -140,8 +142,7 @@ function createCSV($data, $headers) {
 include("../scripts/commonqueries.php");
 
 if (isset($_POST["query"])) {
-    $query = $_POST["query"]
-    ;
+    $query = $_POST["query"];
 } else {
     $queryno = strval($_POST["queryno"]);
     if (count(explode("_", $queryno, 2)) > 1) { //If the query has a parameter
@@ -170,7 +171,7 @@ if (isset($_POST["query"])) {
 if (!validateQuery($query)) { //Check token permissions and query legitstics, etc
     return;
 }
-$data = runQuery($query);
+$data = runQuery($database->real_escape_string($query));
 
 if (is_string($data)) {
     echo "<h4>Query Error: " . getLastError() . "</h4>";

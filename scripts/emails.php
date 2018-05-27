@@ -19,5 +19,26 @@ function email($to, $subject, $message) {
     mail($to, $subject, $message, $headers);
 }
 
+/**
+ * @param string $filename The filename of the email to read
+ * @param array $variables An array of variables to parse in the document
+ * @return string The data from the file
+ */
+function getEmailFile($filename, $variables = array()) {
+    $myfile = fopen("./emails/" . $filename, "r"); //Read the email file we are going to send
+    if ($myfile == null) {
+        echo "Something went really wrong!"; //o shit son
+        return "";
+    }
+    $message = fread($myfile, filesize("./emails/" . $filename));
+    $message = str_replace("\n", "<br>", $message);
+    if (strpos($message, "<html>") == false && strpos($message, "<body>") == false) {
+        $message = "<html><body>$message</body></html>";
+    }
+    foreach($variables as $key => $value) {
+        $message = str_replace('$' . $key, htmlspecialchars($value), $message);
+    }
+    return $message;
+}
 
 ?>

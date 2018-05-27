@@ -58,24 +58,4 @@ function sendErrorEmail($data, $error) {
     
     mail($email, "Site Problems", $string, $headers);
 }
-
-function getEmailFile($filename, $variables) {
-    if (!isset($variables)) { //If no variables are provided
-        $variables = array();
-    }
-    $myfile = fopen("./emails/" . $filename, "r"); //Read the email file we are going to send
-    if ($myfile == null) {
-        echo "Something went really wrong!"; //o shit son
-        return "";
-    }
-    $message = fread($myfile, filesize("./emails/" . $filename));
-    $message = str_replace("\n", "<br>", $message);
-    if (strpos($message, "<html>") == false && strpos($message, "<body>")) {
-        $message = "<html><body>$message</body></html>";
-    }
-    foreach($variables as $key => $value) {
-        $message = str_replace('$' . $key, htmlspecialchars($value), $message);
-    }
-    return $message;
-}
 ?>

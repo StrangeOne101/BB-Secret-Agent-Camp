@@ -25,6 +25,8 @@ $(document).ready(function() {
             } else {
                 $(".adminSignupInput").val("");
                 $("#adminRegister_perm").val("64");
+                $("#adminRegister_alert").modal();
+                $("#submitAdminSignup").removeAttr("disabled");
             }
         });
     });

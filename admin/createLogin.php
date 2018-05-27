@@ -15,7 +15,33 @@ if (!isReady()) { //If the database is broken. If so... fek
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     session_start();
     if (isset($_SESSION["token"])) { //If they are verifying an existing token
+        $token = $_SESSION["token"];
+        if (!isset($_POST["password"])) {
+            echo "Error: No password provided!";
+            return;
+        }
 
+        $query = "SELECT * FROM $TABLE_LOGINS_PENDING WHERE `Token` = \"$token\"";
+        $result = $database->query($query);
+        if (!$result && $result->num_rows > 0) { //If there is a return
+            echo "Error: Token not found in the database!";
+            return;
+        }
+        $row = $result->fetch_assoc();
+
+        if (!createLogin($row["Email"], $_POST["password"], $row["FirstName"], $row["LastName"], intval($row["Permission"]))) {
+            echo "Error: Failed to create login!";
+            return;
+        }
+        $query = "DELETE FROM $TABLE_LOGINS_PENDING WHERE `Token` = \"$token\"";
+        $database->query($query);
+
+        $_SESSION["email"] = $row["Email"];
+        $_SESSION["permission"] = intval($row["Permission"]);
+        $_SESSION["firstname"] = $row["FirstName"];
+        unset($_SESSION["token"]); //Destroy the token that we keep over sessions as it conflicts with this page
+
+        header("Location: ./index.php");
     } else { //If they are creating one to append to the db. This should send out the email as well.
         if (!(isset($_SESSION["email"])) || getPermission($_SESSION["email"]) < 64) {
             echo "Error: Insufficient privileges!";
@@ -38,17 +64,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $query = "INSERT INTO $TABLE_LOGINS_PENDING (FirstName, LastName, Permission, Token, Email, Expiry) VALUES (\"$firstname\", \"$lastname\", $permission, \"$token\", \"$email\", \"$date\")";
 
-        $database->query($query);
+        if (!$database->query($query)) {
+            echo "Error: Failed to insert into the database! " . $database->error;
+        }
 
-        $headers = "From: Space Camp<info@spacecamp.co.nz>; Content-Type: text/html; charset=ISO-8859-1\r\n";
+        $headers = "From: Space Camp <info@spacecamp.co.nz>\r\nMime-Version: 1.0\r\nContent-Type: text/html; charset=ISO-8859-1\r\nReturn-Path: <info@spacecamp.co.nz>";
         $subject = "Space Camp Admin Registration";
 
-        $variables = array("firstname" => $firstname, "lastname" => $lastname, "token" => $token, "email" => $email);
-        $message = getEmailFile("admin_creation.txt", $variables); //Gets the email from the admin_creation.txt file
+        $vars = array("firstname" => $firstname, "lastname" => $lastname, "token" => "https://" . $_SERVER["HTTP_HOST"] . "/admin/invite.php?token=" . $token, "email" => $email);
+        $message = getEmailFile("admin_creation.txt", $vars); //Gets the email from the admin_creation.txt file
 
-        mail($email, $subject, $message, $headers);
-
-        //TODO Put this in the tbl_login_pending table and send email with a link with the token in it
+        if (!mail("$firstname $lastname <$email>", "$subject", "$message", "$headers")) {
+            echo "Error: Failed to send mail - " . getLastError()["message"];
+        }
     }
 
 } else {
