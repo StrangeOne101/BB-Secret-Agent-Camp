@@ -80,7 +80,7 @@ if (isDBDataReady() == "" && $database == null) { //If there are no issues AND t
             }
 
             if (!tableExists($TABLE_LOGINS_PENDING)) {
-                $query = "CREATE TABLE $TABLE_LOGINS_PENDING (`TempUserID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `Email` VARCHAR(32), `FirstName` VARCHAR(20), `LastName` VARCHAR(30), `Permission` TINYINT UNSIGNED DEFAULT 0, `Expirary` DATETIME)";
+                $query = "CREATE TABLE $TABLE_LOGINS_PENDING (`TempUserID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `Token` VARCHAR(255), `Email` VARCHAR(32), `FirstName` VARCHAR(20), `LastName` VARCHAR(30), `Permission` TINYINT UNSIGNED DEFAULT 0, `Expiry` DATETIME)";
                 $database->query($query);
                 debug("Table '$TABLE_LOGINS_PENDING' created in the database.");
             }
@@ -170,7 +170,7 @@ function isValidLogin($email, $password) {
 }
 
 /**
- * Checks the provided token against the database
+ * Checks the provided view token against the database
  * @param $token The token
  * @return bool If the token is valid or not
  */
@@ -197,12 +197,12 @@ function getPermission($email) {
     global $database, $TABLE_LOGINS;
     $email = $database->real_escape_string(strtolower($email));
 
-    $query = "SELECT Permissions FROM $TABLE_LOGINS WHERE `Email` = '$email'";
+    $query = "SELECT Permission FROM $TABLE_LOGINS WHERE `Email` = '$email'";
     $result = $database->query($query);
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        return intval($row["Permissions"]);
+        return intval($row["Permission"]);
     } else {
         return -1;
     }

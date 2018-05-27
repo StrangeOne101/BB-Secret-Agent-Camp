@@ -1,0 +1,13 @@
+Hi $firstname,
+
+You've been registered to help administrate Space Camp! This means that you can view registrations, check statistics, and lots of other things.
+
+To finish joining, click the following link (or copy and paste it into your browser) and create yourself a password.
+<a>$token</a>
+
+The link must be activated within 24 hours. If it has expired or doesn't work, please request for another one.
+
+Thanks,
+Toby
+
+<i>This is an automated message sent by the Space Camp Admin Panel. If you believe this was a mistake, please ignore the message or contact us/reply to this message.</i>

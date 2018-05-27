@@ -3,32 +3,32 @@
 <p>On submission, the recipient will receive an email inviting them to the page. They must accept this within 24 hours.</p>
 <div id="adminSignup" class="container" align="center">
     <div class="row">
-        <form method="post" action="createLogin.php" class="col col-lg-6 row justify-content no-gutters">
+        <div class="col col-lg-6 row justify-content no-gutters">
             <div class="col col-lg-6">
                 <div class="form-group pad-right">
                     <label for="adminRegister_firstname" class="left-label">First Name</label>
-                    <input name="firstname" type="text" class="form-control" id="adminRegister_firstname" placeholder="John" value="">
+                    <input name="" type="text" class="form-control adminSignupInput" id="adminRegister_firstname" placeholder="John" value="">
                 </div>
             </div>
             <div class="col col-lg-6">
                 <div class="form-group pad-left">
                     <label for="adminRegister_lastname" class="left-label">Last Name</label>
-                    <input name="lastname" type="text" class="form-control" id="adminRegister_lastname" placeholder="Doe" value="">
+                    <input name="" type="text" class="form-control adminSignupInput" id="adminRegister_lastname" placeholder="Doe" value="">
                 </div>
             </div>
             <div class="col col-lg-9">
                 <div class="form-group pad-right">
                     <label for="adminRegister_email" class="left-label">Email address</label>
-                    <input name="email" type="email" class="form-control" id="adminRegister_email" placeholder="Enter email" value="">
+                    <input name="" type="email" class="form-control adminSignupInput" id="adminRegister_email" placeholder="Enter email" value="">
                 </div>
             </div>
             <div class="col col-lg-3">
                 <div class="form-group pad-left">
                     <label for="adminRegister_perm" class="left-label">Permission Level</label>
-                    <input name="permissionlevel" type="number" min="0" max="128" class="form-control" id="adminRegister_perm" aria-describedby="warning" value="64">
+                    <input name="" type="number" min="0" max="128" class="form-control" id="adminRegister_perm" aria-describedby="warning" value="64">
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Send Invite</button>
+            <input type="submit" id="submitAdminSignup" disabled class="btn btn-primary btn-block submit" value="Send Invite">
 
             <div class="modal fade" id="adminRegister_alert" tabindex="-1" role="dialog" aria-labelledby="adminRegister_alert_title" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -48,7 +48,7 @@
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
 
     </div>
 </div>

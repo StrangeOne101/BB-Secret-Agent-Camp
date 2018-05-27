@@ -1,5 +1,5 @@
 <?php
-if(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "on" && $_SERVER["HTTP_HOST"] != "localhost")
+if((!isset($_SERVER["HTTPS"]) || $_SERVER["HTTPS"] != "on") && $_SERVER["HTTP_HOST"] != "localhost")
 {
     header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
     exit();
@@ -33,8 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { //If they have just tried to login
         $_SESSION['firstname'] = $names[0];
         $_SESSION['lastname'] = $names[1];
         
-        echo "Successfully logged in";
+        debug("Successfully logged in");
         header("Location: https://" . $_SERVER["HTTP_HOST"] . "/admin/");
+        exit();
     } else {
         $message = "Invalid login details.";
     }

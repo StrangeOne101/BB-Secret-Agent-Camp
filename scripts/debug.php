@@ -5,7 +5,7 @@ if (!(isset($open) && $open)) {
 }
 
 if (!isset($debugVal)) {
-    $debugVal = true;
+    $debugVal = false;
 }
 
 if (!isset($totalErrorsOnPage)) {
