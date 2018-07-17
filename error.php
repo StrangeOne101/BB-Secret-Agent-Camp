@@ -41,7 +41,7 @@
 		<div class="center" id="title_center">
 			<h1>An error occured while registering!</h1>
 			<h3>Sorry about that! However, if you can see this message, please 
-			<a href="mailto:info@bbspacecamp.co.nz?Subject=Site%20Issues">contact us</a> and let us know ASAP!</h3>
+			<a href="mailto:info@spacecamp.co.nz?Subject=Site%20Issues">contact us</a> and let us know ASAP!</h3>
 		</div>
 	</div>
 </body>

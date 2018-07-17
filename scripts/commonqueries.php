@@ -15,9 +15,13 @@ if (!(isset($open) && $open)) {
  * @return string The query
  */
 function getRegistrationQuery() {
-    global $TABLE_REGISTRATIONS;
-    return "SELECT ID, FirstName, LastName, CompanyUnit, RegisteeType, Email, DOB, Address, Phone,
-    MobilePhone, ContactName, ContactPhone, MedicalDetails, FoodDetails, DateRegistered, PhotoPerm FROM $TABLE_REGISTRATIONS";
+    global $TABLE_REGISTRATIONS, $TABLE_COMPANIES, $TABLE_TYPES;
+    return "SELECT $TABLE_REGISTRATIONS.ID, $TABLE_REGISTRATIONS.FirstName, $TABLE_REGISTRATIONS.LastName, $TABLE_COMPANIES.CompanyName AS Company, " .
+		"$TABLE_TYPES.TypeName AS Type, $TABLE_REGISTRATIONS.Email, $TABLE_REGISTRATIONS.DOB, $TABLE_REGISTRATIONS.Address, $TABLE_REGISTRATIONS.Phone, " .
+		"$TABLE_REGISTRATIONS.MobilePhone, $TABLE_REGISTRATIONS.ContactName, $TABLE_REGISTRATIONS.ContactPhone, $TABLE_REGISTRATIONS.MedicalDetails, " .
+		"$TABLE_REGISTRATIONS.FoodDetails, $TABLE_REGISTRATIONS.CadetID, $TABLE_REGISTRATIONS.DateRegistered, $TABLE_REGISTRATIONS.RefNo, $TABLE_REGISTRATIONS.PhotoPerm " .
+ 		"FROM $TABLE_REGISTRATIONS INNER JOIN $TABLE_COMPANIES ON $TABLE_REGISTRATIONS.CompanyUnit = $TABLE_COMPANIES.CompanyID INNER JOIN $TABLE_TYPES ON " .
+ 		"$TABLE_REGISTRATIONS.RegisteeType = $TABLE_TYPES.TypeID ORDER BY RegisteeType, Company, LastName, FirstName";
 }
 
 /**
@@ -26,5 +30,12 @@ function getRegistrationQuery() {
  * @return string The query
  */
 function getRegistrationsByCompanyQuery($companyID) {
-    return getRegistrationQuery() . " WHERE CompanyUnut = $companyID";
+    return getRegistrationQuery() . " WHERE CompanyUnit = $companyID";
 }
+
+function getCompanies() {
+	global $TABLE_COMPANIES;
+	return "SELECT * FROM $TABLE_COMPANIES";
+}
+
+?>

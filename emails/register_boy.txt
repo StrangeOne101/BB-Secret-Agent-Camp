@@ -1,0 +1,14 @@
+Thanks for registering $name for Space Camp.
+
+Please ensure the $75 camp fee is paid before 10 August 2018 to Confirm registration.
+
+Due: $75.00
+Account Number: 03 0855 0359326 01
+Reference: $refno
+Code: 221
+
+Looking forward to seeing $name at camp, it's going to be a fantastic weekend.
+If you have any questions please contact your Boys' Brigade / ICONZ leader or the Camp team at info@spacecamp.co.nz
+
+Kind Regards,
+The Space Camp Team

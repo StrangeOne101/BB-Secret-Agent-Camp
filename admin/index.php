@@ -44,15 +44,15 @@ if (isReady()) {
         header("Location: https://" . $_SERVER["HTTP_HOST"] . "/admin/login.php");
     }
 } else {
-    //This reads the error_database.html file and echos the content here. It's easier than
+    //This reads the error_database_admin.html file and echos the content here. It's easier than
     //writing the entire HTML document in this script file, as HTML documents can be
     //rather large.
-    $myfile = fopen("./pages/error_database.html", "r"); //Open the file
+    $myfile = fopen("./pages/error_database_admin.html", "r"); //Open the file
     if ($myfile == null) {
         echo "Something went really wrong!"; //o shit son
         return "";
     }
-    echo str_replace('$errors', getErrors(), fread($myfile,filesize("./pages/error_database.html"))); //Echo the data, and fill in the errors
+    echo str_replace('$errors', getErrors(), fread($myfile,filesize("./pages/error_database_admin.html"))); //Echo the data, and fill in the errors
     fclose($myfile); //Because we are a tidy kiwi
 }
 

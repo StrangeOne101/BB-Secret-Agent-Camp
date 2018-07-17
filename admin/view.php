@@ -25,12 +25,12 @@ include("../scripts/database.php");
 $lost = false;
 
 function showErrorPage() {
-    $myfile = fopen("./pages/error_database.html", "r"); //Open the file
+    $myfile = fopen("./pages/error_database_admin.html", "r"); //Open the file
     if ($myfile == null) {
         echo "Something went really wrong!"; //o shit son
         return "";
     }
-    echo str_replace('$errors', getErrors(), fread($myfile,filesize("./pages/error_database.html"))); //Echo the data, and fill in the errors
+    echo str_replace('$errors', getErrors(), fread($myfile,filesize("./pages/error_database_admin.html"))); //Echo the data, and fill in the errors
     fclose($myfile); //Because we are a tidy kiwi
 }
 

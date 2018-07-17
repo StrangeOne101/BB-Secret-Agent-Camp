@@ -1,8 +1,9 @@
 <?php
 if (!(isset($open) && $open)) {
-    header("HTTP/1.1 403 Forbidden"); //Prevent it from being seen in a browser
-    exit;
+	header("HTTP/1.1 403 Forbidden"); //Prevent it from being seen in a browser
+	exit;
 }
+
 
 include('debug.php');
 
@@ -25,7 +26,14 @@ $TABLE_PAYMENTS = "tbl_payments"; //Payments and ID of all owing or payed camper
  * @return string The error message, or blank if it is ready
  */
 function isDBDataReady() {
-    $ini_array = parse_ini_file("../../config/database.ini");
+
+
+    if (findConfig() == null) {
+    	debug("Could not find ini config file!");
+    	return false;
+	}
+
+	$ini_array = parse_ini_file(findConfig());
 
     if (!isset($ini_array["port"])) {
         $ini_array["port"] = 1443;
@@ -47,6 +55,29 @@ function isDBDataReady() {
 }
 
 /**
+ * Finds the location of the config.ini file for the database. The relative path can change
+ * depending on the source of the original script, which is why this looks it up.
+ * @return null|string The path. Will be null if not found.
+ */
+function findConfig() {
+	$ini_array = null;
+	$inipath = "config/database.ini";
+	$pathAdditions = 2;
+
+	while (!file_exists($inipath) && $pathAdditions > 0) { //This loop keeps looking up a directory until we find it
+		$inipath = "../" . $inipath;
+		$pathAdditions--;
+	}
+	try {
+		$ini_array = parse_ini_file($inipath);
+	} catch (Exception $e) {
+		return null;
+	}
+
+	return $inipath;
+}
+
+/**
  * Checks the database to see if the table exists or not
  * @param string $tablename The table name
  * @return boolean True if the table exists.
@@ -60,7 +91,7 @@ function tableExists($tablename) {
 
 if (isDBDataReady() == "" && $database == null) { //If there are no issues AND the database has not been connected to yet
     try {
-        $ini_array = parse_ini_file("../../config/database.ini"); //Read ini file
+        $ini_array = parse_ini_file(findConfig()); //Read ini file
         $database = new mysqli($ini_array["hostname"], $ini_array["username"],
             $ini_array["password"], $ini_array["databasename"]); //Create new DB instance
 
@@ -125,7 +156,7 @@ if (isDBDataReady() == "" && $database == null) { //If there are no issues AND t
                 $query = "CREATE TABLE $TABLE_REGISTRATIONS (`ID` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY, `FirstName` VARCHAR(20) NOT NULL, 
 		`LastName` VARCHAR(20) NOT NULL, `DOB` DATE NOT NULL, `CompanyUnit` TINYINT NOT NULL, `Email` VARCHAR(50) NOT NULL, 
 		`Address` VARCHAR(60), `Phone` VARCHAR(14), `MobilePhone` VARCHAR(14), `ContactName` VARCHAR(30), `ContactPhone` VARCHAR(14), `MedicalDetails` VARCHAR(1024), `FoodDetails` VARCHAR(512),
-		`RegisteeType` TINYINT DEFAULT 0, `DateRegistered` DATE, `PhotoPerm` BOOLEAN DEFAULT TRUE)";$database->query($query);
+		`RegisteeType` TINYINT DEFAULT 0, `DateRegistered` DATE, `PhotoPerm` BOOLEAN DEFAULT TRUE, `CadetID` VARCHAR(30), `RefNo` VARCHAR(12), `DatePaid` DATE DEFAULT NULL)";$database->query($query);
                 debug("Table '$TABLE_REGISTRATIONS' created in the database.");
             }
 

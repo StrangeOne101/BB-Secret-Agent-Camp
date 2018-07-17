@@ -103,7 +103,25 @@ body {
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
 
 .dbtable {
-    overflow: scroll;
-    max-height: 300px;
+    overflow-x: scroll;
+    /*max-height: 300px;*/
     min-height: 40px;
+}
+
+.table-active-filters {
+
+}
+
+.filter-add {
+    float: right;
+}
+
+td[shortened] {
+    cursor: pointer;
+}
+
+.database-hashcode {
+    display: none;
+    height: 0px;
+    visibility: hidden;
 }

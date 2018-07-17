@@ -178,8 +178,16 @@ if (is_string($data)) {
     return;
 }
 
+
 if (isset($_POST["notable"]) || isset($_POST["csv"])) { //Return in CSV format
     createCSV($data, !isset($_POST["noheaders"])); //No headers prevents the field names from being included
+} else if (isset($_POST["refresh"])) {
+	$rows = array();
+	while($r = mysqli_fetch_assoc($data)) {
+		$rows[] = $r;
+	}
+	$hash = md5(json_encode($rows));
+	echo '{"hashcode":"' . $hash . '"}';
 } else {
     createTable($data);
 }

@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
 
-<?php 
-
-if($_SERVER["HTTPS"] != "on")
+if($_SERVER["HTTPS"] != "on" && $_SERVER["HTTPS"] != "on" && $_SERVER["HTTP_HOST"] != "localhost")
 {
     header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
     exit();
@@ -12,25 +9,187 @@ if($_SERVER["HTTPS"] != "on")
 $open = true;
 global $open;
 
-include 'Database.php';
+include("scripts/debug.php");
+
+global $debugVal;
+$debugVal = false;
+
+include('scripts/database.php');
+include('scripts/commonqueries.php');
+include('scripts/emails.php');
 
 $name = $email = $address = $postcode = $food = $medical = $phone = $phonemobile = $agentID = "";
 $ecname = $ecphone = "";
 $registeetype = 0;
 $company = -1;
-$officer = 0;
+$personType = 1; //1 = boy, 2 = parent help, 3 = officer, 4 = other
+$photoPerm = 1;
 
 $part = $part2 = "";
 
 $dob = "";
 
-$DEBUG = false;
+$DEBUG = false; //WARNING, Header redirects do not work when DEBUG is on!
 $captchaValid = true;
 global $DEBUG;
 
-global $captchaValid, $validating, $name, $address, $postcode, $company, $dob, $email, $food, $medical, $phone, $phonemobile, $agentID, $ecname, $ecphone, $officer;
+global $captchaValid, $validating, $name, $address, $postcode, $company, $dob, $email, $food, $medical, $phone, $phonemobile, $agentID, $ecname, $ecphone, $personType, $photoPerm;
 
 $validating = false;
+
+
+if (!isReady()) {
+	$myfile = fopen("./admin/pages/error_database.html", "r"); //Open the file
+	if ($myfile == null) {
+		echo "Something went really wrong!"; //o shit son
+		return "";
+	}
+	echo str_replace('$errors', getErrors(), fread($myfile,filesize("./admin/pages/error_database.html"))); //Echo the data, and fill in the errors
+	fclose($myfile); //Because we are a tidy kiwi
+    exit();
+}
+
+$result = runQuery(getCompanies());
+$companies = array();
+$companiesPayToCompany = array();
+
+for ($i = 0; $i < $result->num_rows; $i++) {
+	$currentRow = $result->fetch_assoc();
+	$companies[$currentRow["CompanyID"]] = $currentRow["CompanyName"];
+	$companiesPayToCompany[$currentRow["CompanyID"]] = $currentRow["PayingAsCompany"];
+
+	if ($DEBUG) {
+	    echo $currentRow["CompanyID"] . " => " . $currentRow["CompanyName"] . "\n";
+    }
+}
+
+
+if ($DEBUG) {
+    echo "<br>" . isset($companies["1"]) . " | " . isset($companies[1]);
+}
+
+
+/**
+ * Generates a reference number used for billing
+ * @return string
+ */
+function genRefNo() {
+	$refno = "#BB";
+
+	for ($int = 0; $int < 8; $int++) {
+		$refno = $refno . rand(0, 9);
+	}
+	return $refno;
+}
+
+/**
+ * Registers a new person in the database
+ * @param $name
+ * @param $dob
+ * @param $agentID
+ * @param $address
+ * @param $postcode
+ * @param $phone
+ * @param $phonemobile
+ * @param $email
+ * @param $company
+ * @param $food
+ * @param $medical
+ * @param $ecname
+ * @param $ecphone
+ * @param $type
+ * @param $photoPerm
+ */
+function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobile, $email, $company, $food, $medical, $ecname, $ecphone, $type, $photoPerm) {
+	try {
+
+	    global $TABLE_REGISTRATIONS, $database, $companies, $DEBUG;
+
+		$temp = explode(" ", $name);
+		$lname = $temp[count($temp) - 1]; //Get the last word for the last name
+		$fname = implode(explode(" ", $name, -1)); //Re-stitch the words for the first name (but not the last name)
+
+		$date = date("Y-m-d");
+		$newdob = date("Y-m-d", strtotime($dob)); //Convert the DOB from HTML fields to SQL type
+
+		$addresstotal = str_replace("\r\n", ", ", $address) . ", " . $postcode; //
+		$addresstotal = str_replace("\n", ", ", $address);
+		$addresstotal = str_replace(" ,", ",", $address); //Fix the damn annoying extra spaces that are added per line
+
+		$refno = genRefNo();
+
+
+		$phone = str_replace(" ", "", $phone); //Cut out spaces from phone numbers
+		$phonemobile = str_replace(" ", "", $phonemobile); //Same as above
+		$ecphone = str_replace(" ", "", $ecphone);
+
+		$fname = $database->real_escape_string($fname); //Escape all strings to prevent SQL injections
+		$lname = $database->real_escape_string($lname);
+		$addresstotal = $database->real_escape_string($addresstotal);
+		$food = $database->real_escape_string($food);
+		$ecname = $database->real_escape_string($ecname);
+		$ecphone = $database->real_escape_string($ecphone);
+		$medical = $database->real_escape_string($medical);
+		$phone = $database->real_escape_string($phone);
+		$phonemobile = $database->real_escape_string($phonemobile);
+		$email = $database->real_escape_string($email);
+
+		$insertSQL = "INSERT INTO $TABLE_REGISTRATIONS (FirstName, LastName, DOB, Email, Address, Phone, MobilePhone, CompanyUnit, ContactName, ContactPhone," .
+			"MedicalDetails, FoodDetails, RegisteeType, RefNo, CadetID, DateRegistered, PhotoPerm) VALUES ('$fname', '$lname', '$newdob', '$email'," .
+			"'$addresstotal', '$phone', '$phonemobile', $company, '$ecname', '$ecphone', '$medical', '$food', $type, '$refno', '$agentID', '$date', $photoPerm);";
+
+		$checkSQL = "SELECT Refno FROM $TABLE_REGISTRATIONS WHERE RefNo = '$refno'";
+
+		$i = 0;
+		while (runQuery($checkSQL)->num_rows > 0) {
+			if ($i > 40) {
+				debug("Error: Could not generate refno that does not already exist!");
+				return;
+			}
+
+			$refno = genRefNo();
+			$i++;
+		}
+
+
+		if ($database->query($insertSQL)) {
+			debug("Inserted query.");
+
+            $regType = ""; //This is the suffix for the file we will open
+			if ($type == 1) $regType = "boy";
+			else if ($type == 2) $regType = "parent_help";
+			else if ($type == 3) $regType = "leader";
+			else $regType = "other";
+
+			$file = "register_$regType.txt"; //The file we are reading the email from
+
+			$emailData = getEmailFile($file, array("name" => $fname, "refno" => $refno), false); //Read from file and interpret
+			emailNoHTML($email, "Space Camp Registration", $emailData); //Send the email
+            if ($DEBUG) {
+                echo "<br><br>Email data:<br>" . $emailData;
+            }
+			session_start(); //Allows us to store the email they used while moving pages
+			$_SESSION["email"] = $email;
+			header("Location: thanks.php"); //Change to the thanks page
+            exit();
+		} else {
+			debug("Failed to insert: " . $database->error);
+
+			$data = "FirstName: $fname\r\n" . "LastName: $lname\r\n" . "DOB: $dob\r\n" . "Email: $email\r\n" . "Address: $addresstotal\r\n"
+				. "Phone: $phone\r\n" . "MobilePhone: $phonemobile\r\n" . "Company (int): $company\r\n" . "Company: $companies[$company]\r\n"
+				. "ContactName: $ecname\r\n" . "ContactPhone: $ecphone\r\n" . "Medical Details: $medical\r\n" . "Food Details: $food\r\n"
+				. "Type: " . $type . "\r\n" . "RefNo: $refno\r\n" . "CadetID: $agentID\r\n"
+				. "Date: $date\r\n";
+			sendErrorEmail($data, $database->error);
+			header("Location: error.php");
+			exit();
+		}
+
+		//$database->close();
+	} catch (PDOException $e) {
+		debug("Failed with exception: " . $e->getMessage());
+	}
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	foreach ($_POST as $key => $value)
@@ -43,46 +202,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$email = $_POST["email"];
 	$address = $_POST["address"];
 	$dob = $_POST["dateofbirth"];
-	if (isset($_POST["company"])) {
-		$company = $_POST["company"];
-		if ($company >= 0) {
-		    $companystring = $GLOBALS["companies"][$company];
-		}
-	} 
+	$company = $_POST["company"];
 	
 	$postcode = $_POST["postcode"];
 	$food = $_POST["food"];
 	$medical = $_POST["medical"];
 	$phone = $_POST["phone"];
 	$phonemobile = $_POST["phonemobile"];
-	$agentID = $_POST["agentid"];
+	$agentID = $_POST["cadetid"];
 	$ecname = $_POST["ecname"];
 	$ecphone = $_POST["ecphone"];
-	if (!empty($_POST["officer"])) {
-	    $officer = 1;
-	}
-	
+	$personType = $_POST["type"];
+	$photoPerm = isset($_POST["photoperm"]);
+
+
 	$response = $_POST["g-recaptcha-response"];
 	
 	
-	if (empty($name) || empty($email) || empty($address) || empty($dob) || $company == 0 || empty($postcode) 
-			|| (empty($phone) || empty($phonemobile)) || empty($agentID) || empty($ecname) || empty($ecname)) {
+	if (empty($name) || len(explode(" ", $name) < 2)|| empty($email) || empty($address) || empty($dob) || empty($postcode) || (empty($phone) ||
+            empty($phonemobile)) || empty($agentID) || empty($ecname) || empty($ecname) || !isset($companies[$company])) {
 				$validating = true;
+
+				if ($DEBUG) {
+				    echo empty($name) . "-" . empty($email) . "-" . empty($email) . "-" . empty($dob) . "-" . empty($phone) . "-";
+					echo empty($phonemobile) . "-" . empty($agentID) . "-" . empty($ecname) . "-" . !isset($companies[$company]);
+				    /*if (isset($companies[$company])) {
+				        echo "TRUE";
+                    } if (!isset($companies[$company])) {
+				        echo "FALSE";
+                    }
+				    echo isset($companies[$company]) . " = " . $company;*/
+                }
 	} else {
 		//The form is valid. Register the user.
 	    if (!checkCaptcha($response)) {
 	        $captchaValid = false;
 	    } else {
-	        register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobile, $email, ($company -1), $food, $medical, $ecname, $ecphone, $officer);
+	        register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobile, $email, $company, $food, $medical, $ecname, $ecphone, $personType, $photoPerm);
 	    }
 	}
 	
 	if ($DEBUG) {
-	    echo "Company : " . ($company - 1);
+	    echo "Company : " . ($company);
 	    echo "Address: " . str_replace("\n", ", ", str_replace(" \n", ", ", $address));
 	}
 	
-} 
+}
 
 if (empty($agentID)) {
 	$part1 = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 2);
@@ -90,10 +255,12 @@ if (empty($agentID)) {
 	
 	$agentID = $part1 . $part2;
 }
-//0 = firstname
-//1 = lastname
+//1 = email
+//2 = name
+//3 = company
 
 function validate($input, $type = 0) {
+    global $companies;
 	if (!$GLOBALS['validating']) {
 		echo "class=\"form\"";
 		return;
@@ -104,7 +271,7 @@ function validate($input, $type = 0) {
 		$output = $output . "invalid-email";//Append 
 	} else if ($type == 2 && !preg_match("/\w.*\s.*\w/", $input)) {
 		$output = $output . "invalid-name";
-	} else if ($type == 3 && $input <= 0) { 
+	} else if ($type == 3 && !isset($companies[$input])) {
 		$output = $output . "invalid-company";
 	}else if ($input == null || $input == "") {
 		$output = $output . "invalid";
@@ -137,8 +304,12 @@ function checkCaptcha($key) {
     
     return false;
 }
-?>
 
+
+//echo implode(", ", $array);
+?>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 
     <meta charset="utf-8">
@@ -159,11 +330,12 @@ function checkCaptcha($key) {
     
     <link rel="shortcut icon" href="favicon.ico">
     
-    <script src="js/jquery-3.2.1.slim.min.js"></script>
+    <script src="js/jquery.min.js"></script>
     <script src="js/register.js"></script>
-    
+    <script src="js/modernizr-custom.js"></script>
+
     <!-- Google's Captcha API - Prevents bots from flooding our DB -->
-    <script src='https://www.google.com/recaptcha/api.js'></script> 
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <!--<script src="js/bootstrap.min.js"></script> -->
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -196,19 +368,23 @@ function checkCaptcha($key) {
     	        	<!--  <?php validate(1)?>
     	        	<input id="form-lastname" class="form" name="lname" placeholder="Smith" type="text" value="">
     				-->
-    				<input id="form-agentID" class="form" disabled name="agentid" type="text" maxlength="5" value="<?php echo $agentID?>">
+    				<input id="form-agentID" class="form" disabled name="cadetid" type="text" maxlength="5" value="<?php echo $agentID?>">
     	        	
     	        	<select id="form-company" <?php validate($company, 3)?> name="company"  value="<?php echo $company?>">
     		        	<option value="0" disabled selected>** Please Select **</option>
     		        	<?php         							
-    		        		for($i = 0; $i < count($GLOBALS["companies"]); $i++) {
-    		        			$ii = $i + 1;
-    		        			echo "<option value='$ii' " . ($company == $ii ? "selected" : "") . ">" . $GLOBALS["companies"][$i] . "</option>";
+    		        		foreach ($companies as $key => $value) {
+    		        			echo "<option value='$key' " . ($company == $key ? "selected" : "") . ">" . $value . "</option>";
     		        		}
     		        		?>
     	        	</select>
     	        	
-    	        	<input id="form-officer" class="form" type="checkbox" value="1" name="officer" <?php if ($officer == 1) echo "checked" ?>>
+    	        	<select id="form-type" class="form" name="type" value="<?php echo $personType ?>">
+                        <option value="1" <?php if ($personType == 1) echo "selected"; ?>>Boy</option>
+                        <option value="2" <?php if ($personType == 2) echo "selected"; ?>>Parent Help</option>
+                        <option value="3" <?php if ($personType == 3) echo "selected"; ?>>Officer/Leader</option>
+                        <option value="4" <?php if ($personType == 4) echo "selected"; ?>>Other</option>
+                    </select>
     	        	
     	        	<input id="form-dob" <?php validate($dob)?> name="dateofbirth" placeholder="dd/mm/yyyy" value="<?php echo $dob?>" type="date">
     				
@@ -225,7 +401,8 @@ function checkCaptcha($key) {
     	        	
     	        	<input id="form-ecname" <?php validate($ecname)?> placeholder="Mr. Smith" name="ecname" maxlength="20" type="text" value="<?php echo $ecname?>">
     	        	<input id="form-ecphone" <?php validate($ecphone)?> name="ecphone" type="text" maxlength="15" value="<?php echo $ecphone?>">
-    	        	
+    	        	<input id="form-photo" name="photoperm" type="checkbox" <?php if ($photoPerm == 1) echo "checked" ?>>
+
     	        	<?php if ($validating) { //The form isn't valid still, or we will have been redirected
     	        		echo "<span id='form-invalid'>Please fill out all the fields marked in red, then try again.</span>";
     	        	}

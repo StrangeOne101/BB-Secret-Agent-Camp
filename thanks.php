@@ -16,7 +16,7 @@
   	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
   	<meta http-equiv="pragma" content="no-cache" />
     
-    <title>Secret Agent Camp - Thanks</title>
+    <title>Space Camp - Thanks</title>
 
 	<!-- Bootstrap Core CSS -->
     <!--  <link href="css/bootstrap.min.css" rel="stylesheet">-->
@@ -50,7 +50,7 @@
 			    echo "<h3>You should recieve an email about it shortly.</h3>";
 			}
 			?>
-			<h3>Want to register another child? Click <a href="/register.php" >here</a>.</h3>
+			<h3>Want to continue registering? Click <a href="/register.php" >here</a>.</h3>
 		</div>
 	</div>
 </body>

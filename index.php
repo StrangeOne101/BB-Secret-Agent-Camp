@@ -78,15 +78,25 @@ global $days;
 
 	<div id="tile">
 		<div class="center" id="title_center">
-			<h3>Space Camp... Lift Off In...</h3>
+			<!--<h3>Space Camp... Lift Off In...</h3>
 			<h1 id="sac-timer"><?php echo $days?> Days</h1>
 			
 			<input id="register-btn" type="button" class="btn btn-large btn-lg" title="Register" value="Register Here!" onclick="document.location='/register.php'">
-			<h5>Registrations close on August 11th</h5>
+			<h5>Registrations close on August 11th</h5>-->
+
+            <div id="banner">
+                <img src="img/header_t.png" width="80%">
+                <h3 style="margin-top: -20px">SPACE CAMP! LIFT OFF IN <?php echo $days?> DAYS!</h3>
+            </div>
+            <input id="register-btn" type="button" class="btn btn-large btn-lg" title="Register" value="Register Here!" onclick="document.location='/register.php'">
 			
 		</div>
 		<div class="admin-buttons"><form action="/admin"><input type="submit" class="btn btn-large btn-danger invisible" value="Admin Panel"/></form></div>
 	</div>
+    <div class="icons">
+        <a href="https://www.bbcanterbury.org.nz/"><img class="img-icon" src="img/logo-bb.png"></a>
+        <a href="http://site.iconz.org.nz/"><img class="img-icon" src="img/logo-iconz.png"></a>
+    </div>
 	<?php 
 	/*if ($loggedIn) {
 	    echo "<span class='administrate'>Admin Panel</span>";
