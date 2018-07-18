@@ -25,6 +25,20 @@ function getRegistrationQuery() {
 }
 
 /**
+ * Returns a query to get all recent registrations (all ones within the last week). Same as
+ * getRegistrationQuery() but with less fields
+ * @return string
+ */
+function getRecentRegistrations() {
+	global $TABLE_REGISTRATIONS, $TABLE_COMPANIES, $TABLE_TYPES;
+	return "SELECT $TABLE_REGISTRATIONS.FirstName, $TABLE_REGISTRATIONS.LastName, $TABLE_COMPANIES.CompanyName AS Company, " .
+		"$TABLE_TYPES.TypeName AS Type, $TABLE_REGISTRATIONS.Email, $TABLE_REGISTRATIONS.DOB, $TABLE_REGISTRATIONS.Address, $TABLE_REGISTRATIONS.MedicalDetails, " .
+		"$TABLE_REGISTRATIONS.FoodDetails, $TABLE_REGISTRATIONS.DateRegistered, $TABLE_REGISTRATIONS.RefNo, $TABLE_REGISTRATIONS.PhotoPerm " .
+		"FROM $TABLE_REGISTRATIONS INNER JOIN $TABLE_COMPANIES ON $TABLE_REGISTRATIONS.CompanyUnit = $TABLE_COMPANIES.CompanyID INNER JOIN $TABLE_TYPES ON " .
+		"$TABLE_REGISTRATIONS.RegisteeType = $TABLE_TYPES.TypeID WHERE $TABLE_REGISTRATIONS.DateRegistered > (NOW() - INTERVAL 7 DAY) ORDER BY DateRegistered, ID ASC";
+}
+
+/**
  * Gets a query for all registration data in the database from a certain company
  * @param int $companyID The ID of the company
  * @return string The query

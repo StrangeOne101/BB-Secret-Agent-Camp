@@ -125,3 +125,17 @@ td[shortened] {
     height: 0px;
     visibility: hidden;
 }
+
+.chart {
+    display: inline-block;
+}
+
+.line-chart {
+    width: 600px;
+    height: 300px;
+}
+
+.pie-chart {
+    width: 500px;
+    height: 300px;
+}

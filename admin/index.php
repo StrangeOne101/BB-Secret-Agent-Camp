@@ -139,7 +139,7 @@ function addDivider($dividerName) {
     array_push($pages, $html);
 }
 
-loadPage("Dashboard", "admin_dashboard.html", "home", null, null);
+loadPage("Dashboard", "admin_dashboard.html", "home", null, "admin_dashboard");
 loadPage("Registration Data", "admin_data.html", "users", null, "admin_data");
 loadPage("Fee Management", "admin_fees.html", "credit-card", null, null);
 loadPage("Send Camp Email", "admin_email.html", "mail", null, "admin_email");

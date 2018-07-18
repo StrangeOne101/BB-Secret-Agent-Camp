@@ -160,7 +160,9 @@ if (isset($_POST["query"])) {
             return;
         }
         $query = getRegistrationsByCompanyQuery(intval($param));
-    } else {
+    } else if ($queryno == "2") {
+    	$query = getRecentRegistrations();
+	}  else {
         echo "<h4>Error: Unknown common query with ID $queryno!</h4>";
         return;
     }

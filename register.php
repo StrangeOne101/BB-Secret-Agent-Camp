@@ -219,7 +219,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$response = $_POST["g-recaptcha-response"];
 	
 	
-	if (empty($name) || len(explode(" ", $name) < 2)|| empty($email) || empty($address) || empty($dob) || empty($postcode) || (empty($phone) ||
+	if (!preg_match("/\w.*\s.*\w/", $name) || !filter_var($email, FILTER_VALIDATE_EMAIL) || empty($address) || empty($dob) || empty($postcode) || (empty($phone) ||
             empty($phonemobile)) || empty($agentID) || empty($ecname) || empty($ecname) || !isset($companies[$company])) {
 				$validating = true;
 

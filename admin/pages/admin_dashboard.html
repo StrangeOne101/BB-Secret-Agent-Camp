@@ -1,11 +1,14 @@
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <h1 class="h2">Dashboard</h1>
-</div>
+<!--<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+</div>-->
+<h4>Recent Registrations (Within the last Week)</h4>
+<div id="registrationData_recents" style="max-height: 500px" class="dbtable">
 
-<h3>Registrations</h3>
-<h6>Boys Registered: <span id="db_count_boycount">0</span></h6>
-<h6>Officers Registered: <span id="db_count_officercount">0</span></h6>
-<h6>Total Registered: <span id="db_count_totalcount">0</span></h6>
+</div><br>
+<div id="recentStatistics">
+    <h4 class="pb-2 border-bottom">Statistics</h4>
+    <div id="recentStatistics_total" class="pie-chart chart"></div>
+    <div id="recentStatistics_numberOverTime" class="line-chart chart"></div>
+</div>
 <!--<div class="table-responsive">
     <table class="table table-striped table-sm">
         <thead>
