@@ -1,0 +1,45 @@
+<h4>External Data Viewings</h4>
+<p>This page allows you to invite others to view data from the database under certain conditions. E.g. invite officers to
+    view the details of boys from their company, or let the cook view everyone with dietary requirements.</p>
+<p>This page is a work in progress.</p>
+<div class="container" style="margin: 0px 0px 0px 0px">
+    <div class="row">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#modal_dataViewers_add">Add New</button>
+        <table id="dataViewerTable"></table>
+
+    </div>
+</div>
+
+<div id="modal_dataViewers_add" class="modal fade" id="dataViewerModal" tabindex="-1" role="dialog" aria-labelledby="dataViewerModal_title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dataViewerModal_title">Create New Data Viewing Link</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Select the query you want to create and click the button bellow. You will then be given a link to send to people.<br><br>
+                <div class="form-group">
+                    <label for="dataViewerAddTitle"><strong>Title</strong></label>
+                    <input type="text" class="form-control dataViewerForm" id="dataViewerAddTitle" placeholder="All Registrations From x Company">
+                    <label for="dataViewerAddQueryType"><strong>Data</strong></label>
+                    <select class="form-control selectpicker dataViewerForm" id="dataViewerAddQueryType">
+                        <option value="-1" disabled selected>** Please select **</option>
+                        <option value="1">All From Company...</option>
+                        <option value="3">All with Dietary Needs</option>
+                        <option value="4">All with Medical Conditions</option>
+                    </select>
+                    <label for="dataViewerAddCompany" class="invisible hidden dataViewerAddCompanySelector dataViewerForm"><strong>Company</strong></label>
+                    <select class="form-control company-selector invisible hidden dataViewerAddCompanySelector" id="dataViewerAddCompany"></select>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="dataViewerModalConfirm" type="button" class="btn btn-primary" disabled data-dismiss="modal">Create Link!</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

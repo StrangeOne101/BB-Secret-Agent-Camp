@@ -23,6 +23,7 @@ function updateRegistrationData() {
 		expandFieldWidth(table, "MedicalDetails", 200);
 		expandFieldWidth(table, "FoodDetails", 200);
 		expandFieldWidth(table, "Address", 200);
+		expandFieldWidth(table, "Company", 150);
 	});
 }
 

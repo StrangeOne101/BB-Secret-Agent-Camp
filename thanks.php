@@ -42,12 +42,12 @@
 			<h1>Thanks for registering!</h1>
 			<?php session_start();
 			
-			if (isset($_SESSION["email"])) {
+			if (isset($_SESSION["display-email"])) {
 			    //echo "You should recieve an email shortly.";
-			    echo "<h4>We've sent an email to <u>" . $_SESSION["email"] . "</u>. You should recieve it shortly.</h4>";
+			    echo "<h4>We've sent an email to <u>" . $_SESSION["display-email"] . "</u>. You should receive it shortly.</h4>";
 			} 
 			else {
-			    echo "<h3>You should recieve an email about it shortly.</h3>";
+			    echo "<h3>You should receive an email about it shortly.</h3>";
 			}
 			?>
 			<h3>Want to continue registering? Click <a href="/register.php" >here</a>.</h3>

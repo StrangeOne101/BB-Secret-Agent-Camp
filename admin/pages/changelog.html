@@ -1,0 +1,65 @@
+<div id="changelog">
+<h3>Changelog</h3>
+    <h5>20/7/18</h5>
+    Added Statistics
+    <ul>
+        <li>Added 3 pie charts to the statistics page</li>
+    </ul>
+    Modified Database Tables
+    <ul>
+        <li>Tables now show the most recent ones at the top of the table and are no longer sorted based on type (was too confusing
+            to find new entries)</li>
+    </ul>
+    <h5>19/7/18</h5>
+    New Data Viewers Page
+    <ul>
+        <li>Allows you to invite others to view from the database with set queries</li>
+        <li>The page itself explains what it is for and how to use it</li>
+        <li>Still a Work in Progress. Backend has yet do be done and some front end still needs work.</li>
+    </ul>
+    New Changelog page (this page)
+    <ul><li>Just a more tidy way of keeping track of changes to the panel.</li></ul>
+    Misc Changes
+    <ul>
+        <li>Registrations now filter values such as nil, N/A, none, -, nothing, etc, from medical and dietary fields. This
+        means we don't have to go in and edit it ourselves so that the registration doesn't come up in medical/dietary queries.</li>
+    </ul>
+    Bug Fixes
+        <ul>
+            <li>Fixed postcodes not being added to addresses in the database. This bug was only introduced recently and only
+            affects a few registrations</li>
+            <li>Fixed being able to register without a last name</li>
+        </ul>
+    <h5>18/7/18</h5>
+    New Dashboard
+    <ul>
+        <li>Shows all recent registrations within the last week</li>
+        <li>Shows a pie chart of the total registrations</li>
+        <li>Shows a line graph of the number of registrations we are getting per day</li>
+        <li>All things shown are live and are updated when you refresh the page</li>
+    </ul>
+    Database Table Improvements
+    <ul>
+        <li>Database table now checks every 10 minutes if there has been an update to the table, and if there has been, it
+            updates itself</li>
+    </ul>
+    <h5>15/7/18</h5>
+    Database Table Improvements
+    <ul>
+        <li>Table now shortens long pieces of data so the size of the table doesn't overflow. Can be clicked on to show the full
+        entry, and can be clicked again to hide it once more.</li>
+        <li>Ability to increase field widths of particular fields.</li>
+        <li>Increased default height of table</li>
+    </ul>
+    <h5>14/7/18</h5>
+    Bug Fixes
+    <ul>
+        <li>Fixed registrations not sending out emails and not taking users to the thank you page.</li>
+    </ul>
+    <br>
+    <div class="align-content-center align-items-center text-center" style="padding: 20px;">
+        <img src="../img/empty.png" width="100px" height="100px">
+        <p style="font-size: 20px; margin-top: 8px;">Wow, such empty</p>
+    </div>
+    <br>
+</div>

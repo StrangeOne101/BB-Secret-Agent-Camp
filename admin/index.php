@@ -143,9 +143,11 @@ loadPage("Dashboard", "admin_dashboard.html", "home", null, "admin_dashboard");
 loadPage("Registration Data", "admin_data.html", "users", null, "admin_data");
 loadPage("Fee Management", "admin_fees.html", "credit-card", null, null);
 loadPage("Send Camp Email", "admin_email.html", "mail", null, "admin_email");
-loadPage("Statistics", "admin_statistics.html", "pie-chart", null, null);
+loadPage("Invite Viewers", "admin_dataviewing.html", "send", null, "admin_dataviewers");
+loadPage("Statistics", "admin_statistics.html", "pie-chart", null, "admin_statistics");
 addDivider("Panel Options");
 loadPage("Admin Registration", "admin_signup.html", "clipboard", "admin_signup", "admin_signup");
+loadPage("Panel Changelog", "changelog.html", "clock", "changelog", null);
 
 $jsData = "";
 $cssData = "";

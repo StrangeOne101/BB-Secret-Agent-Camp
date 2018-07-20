@@ -113,8 +113,8 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
 		$newdob = date("Y-m-d", strtotime($dob)); //Convert the DOB from HTML fields to SQL type
 
 		$addresstotal = str_replace("\r\n", ", ", $address) . ", " . $postcode; //
-		$addresstotal = str_replace("\n", ", ", $address);
-		$addresstotal = str_replace(" ,", ",", $address); //Fix the damn annoying extra spaces that are added per line
+		$addresstotal = str_replace("\n", ", ", $addresstotal);
+		$addresstotal = str_replace(" ,", ",", $addresstotal); //Fix the damn annoying extra spaces that are added per line
 
 		$refno = genRefNo();
 
@@ -126,10 +126,10 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
 		$fname = $database->real_escape_string($fname); //Escape all strings to prevent SQL injections
 		$lname = $database->real_escape_string($lname);
 		$addresstotal = $database->real_escape_string($addresstotal);
-		$food = $database->real_escape_string($food);
+		$food = $database->real_escape_string(filterNil($food));
 		$ecname = $database->real_escape_string($ecname);
 		$ecphone = $database->real_escape_string($ecphone);
-		$medical = $database->real_escape_string($medical);
+		$medical = $database->real_escape_string(filterNil($medical));
 		$phone = $database->real_escape_string($phone);
 		$phonemobile = $database->real_escape_string($phonemobile);
 		$email = $database->real_escape_string($email);
@@ -169,7 +169,7 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
                 echo "<br><br>Email data:<br>" . $emailData;
             }
 			session_start(); //Allows us to store the email they used while moving pages
-			$_SESSION["email"] = $email;
+			$_SESSION["display-email"] = $email; //Store it on 'display-email' so it doesn't collide with admin page login checks
 			header("Location: thanks.php"); //Change to the thanks page
             exit();
 		} else {
@@ -281,6 +281,21 @@ function validate($input, $type = 0) {
 	
 	
 	echo $output;
+}
+
+/**
+ * Gets rid of any input that doesn't need to be there. E.g. 'nil', "nothing", etc
+ * @param $input The input
+ * @return string The input, but filtered
+ */
+function filterNil($input) {
+    $filter = array("nil", "nothing", "none", "na", "n/a", "-", "null", "same as above", "see above");
+    for ($i = 0; $i < count($filter); $i++) {
+        if (strcasecmp($input, $filter[$i]) == 0) {
+            return "";
+        }
+    }
+    return $input;
 }
 
 function checkCaptcha($key) {

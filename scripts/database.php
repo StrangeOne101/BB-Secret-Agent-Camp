@@ -118,8 +118,9 @@ if (isDBDataReady() == "" && $database == null) { //If there are no issues AND t
 
             //Tokens table. Used to store valid SQL queries that data editors stored in the logins table can run.
             if (!tableExists($TABLE_TOKENS)) {
-                $query = "CREATE TABLE $TABLE_TOKENS (`UserID` INTEGER UNSIGNED PRIMARY KEY, `ReadQuery` VARCHAR(512), `WriteQuery` VARCHAR(255))";
-                $database->query($query);
+                //$query = "CREATE TABLE $TABLE_TOKENS (`UserID` INTEGER UNSIGNED PRIMARY KEY, `ReadQuery` VARCHAR(512), `WriteQuery` VARCHAR(255))";
+				$query = "CREATE TABLE $TABLE_TOKENS (`UserID` INTEGER UNSIGNED PRIMARY KEY, `Token` VARCHAR(64), `QueryID` INTEGER UNSIGNED, `Paramaters` VARCHAR(255))";
+				$database->query($query);
                 debug("Table '$TABLE_TOKENS' created in the database.");
             }
 

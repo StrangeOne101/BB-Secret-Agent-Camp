@@ -135,7 +135,12 @@ td[shortened] {
     height: 300px;
 }
 
-.pie-chart {
+.pie-chart-large {
     width: 500px;
     height: 300px;
+}
+
+.pie-chart {
+    width: 370px;
+    height: 210px;
 }
