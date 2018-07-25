@@ -1,11 +1,12 @@
 $(document).ready(function() {
-    if (query == "") return; //An error occured
-
+	if (typeof database === 'undefined') {
+		return;
+	}
     $("#downloadCSV").click(function() {
-        $.post("dbquery.php", {
-            query: query,
-            csv: true
-        }, function(data,status) {
+    	var sendObject = {...database}; //Clone the database object
+    	sendObject.csv = true; //Set CSV to true
+
+        $.post("dbquery.php", sendObject, function(data,status) {
             let csvContent = "data:text/csv;charset=utf-8," + data;
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
@@ -19,12 +20,22 @@ $(document).ready(function() {
             link.setAttribute("download", "SpaceCampData-" + dateStr + ".csv");
             link.innerHTML= "Click Here to download";
             document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         });
     });
 
-    $.post("dbquery.php", {
+	var table = $("#databaseTable").children("table")[0];
+	shortenLongFields(table);
+	expandFieldWidth(table, "MedicalDetails", 200);
+	expandFieldWidth(table, "FoodDetails", 200);
+	expandFieldWidth(table, "Address", 200);
+
+    /*$.post("dbquery.php", {
         query: query,
     }, function(data,status) {
         $("#databaseTable").html(data);
-    });
+    });*/
+
+
 });

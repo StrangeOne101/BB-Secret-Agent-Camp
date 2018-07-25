@@ -119,7 +119,7 @@ if (isDBDataReady() == "" && $database == null) { //If there are no issues AND t
             //Tokens table. Used to store valid SQL queries that data editors stored in the logins table can run.
             if (!tableExists($TABLE_TOKENS)) {
                 //$query = "CREATE TABLE $TABLE_TOKENS (`UserID` INTEGER UNSIGNED PRIMARY KEY, `ReadQuery` VARCHAR(512), `WriteQuery` VARCHAR(255))";
-				$query = "CREATE TABLE $TABLE_TOKENS (`UserID` INTEGER UNSIGNED PRIMARY KEY, `Token` VARCHAR(64), `QueryID` INTEGER UNSIGNED, `Paramaters` VARCHAR(255))";
+				$query = "CREATE TABLE $TABLE_TOKENS (`TokenID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `Title` VARCHAR(255), `Token` VARCHAR(32), `QueryID` INTEGER UNSIGNED, `Parameters` VARCHAR(255))";
 				$database->query($query);
                 debug("Table '$TABLE_TOKENS' created in the database.");
             }
@@ -128,7 +128,7 @@ if (isDBDataReady() == "" && $database == null) { //If there are no issues AND t
             if (!tableExists($TABLE_COMPANIES)) { //Create the base table and insert all companies into it
                 $query = "CREATE TABLE $TABLE_COMPANIES (`CompanyID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `CompanyName` VARCHAR(40), `PayingAsCompany` BOOLEAN DEFAULT FALSE)";
                 $database->query($query);
-                $query = "INSERT INTO $TABLE_COMPANIES (`CompanyName`) VALUES ('1st Ashburton'), ('1st Blenheim'), ('1st Christchurch'), ('2nd Christchurch'), ('4th Christchurch'), ('8th Christchurch'), ('14th Christchurch'), ('1st Rangiora'), ('2st Rangiora'), "
+                $query = "INSERT INTO $TABLE_COMPANIES (`CompanyName`) VALUES ('1st Ashburton'), ('1st Blenheim'), ('1st Christchurch'), ('2nd Christchurch'), ('4th Christchurch'), ('8th Christchurch'), ('14th Christchurch'), ('1st Rangiora'), ('2nd Rangiora'), "
                     . "('3rd Timaru'), ('1st Waimate'), ('Hornby ICONZ'), ('Lincoln ICONZ'), ('Oxford ICONZ'), ('Richmond ICONZ'), ('St Albans ICONZ'), ('Parklands ICONZ'), ('Westside ICONZ')";
                 $database->query($query);
                 $query = "INSERT INTO $TABLE_COMPANIES (`CompanyID`, `CompanyName`) VALUES (99, 'Other')";
@@ -202,6 +202,7 @@ function isValidLogin($email, $password) {
 }
 
 /**
+ * @Deprecated NO LONGER USED
  * Checks the provided view token against the database
  * @param $token The token
  * @return bool If the token is valid or not

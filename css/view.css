@@ -1,0 +1,14 @@
+body {
+    background-color: #FCFCFC;
+}
+
+.dbtable {
+    overflow: scroll;
+    min-height: 40px;
+}
+
+#downloadCSV {
+    float: right;
+    margin: 0px 30px 0px 30px;
+    display: inline-block;
+}

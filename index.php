@@ -44,8 +44,8 @@ global $days;
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Toby Strange (StrangeOne101)">
-	<meta name="robots" content="noindex">
-    <meta name="googlebot" content="noindex">
+	<!--<meta name="robots" content="noindex">  <!-- This has been commented out as a trial to let google index the page -->
+    <!--<meta name="googlebot" content="noindex"> -->
     
     <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0" />
   	<meta http-equiv="cache-control" content="max-age=0" />

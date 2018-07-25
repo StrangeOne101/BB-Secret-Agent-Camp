@@ -144,3 +144,5 @@ td[shortened] {
     width: 370px;
     height: 210px;
 }
+
+svg > g > g:last-child { pointer-events: none } /** Fixes a google chart bug */

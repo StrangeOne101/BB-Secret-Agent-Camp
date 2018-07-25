@@ -19,7 +19,7 @@ global $debugVal;
 $debugVal = false; //So debug doesn't echo
 
 include("../scripts/database.php");
-
+include("../scripts/commonqueries.php");
 //Start of the real stuff and not just imports
 
 $lost = false;
@@ -28,23 +28,86 @@ function showErrorPage() {
     $myfile = fopen("./pages/error_database_admin.html", "r"); //Open the file
     if ($myfile == null) {
         echo "Something went really wrong!"; //o shit son
-        return "";
+        exit();
     }
     echo str_replace('$errors', getErrors(), fread($myfile,filesize("./pages/error_database_admin.html"))); //Echo the data, and fill in the errors
     fclose($myfile); //Because we are a tidy kiwi
 }
+
+/*function postToDBQuery($query, $params) {
+	$url = 'dbquery.php';
+	$data = array('queryno' => $query, 'parameters' => $params);
+
+// use key 'http' even if you send the request to https://...
+	$options = array(
+		'http' => array(
+			'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+			'method'  => 'POST',
+			'content' => http_build_query($data)
+		)
+	);
+	$context  = stream_context_create($options);
+	$result = file_get_contents($url, false, $context);
+	if ($result === FALSE) { /* Handle error */ //}
+
+	/*var_dump($result);
+}*/
 
 if (!isReady()) {
     showErrorPage();
     return;
 }
 
-if (!isset($_GET["token"]) || !isValidToken($_GET["token"])) {
+function createDatabaseTable($query) {
+    $data = runQuery($query);
+
+    echo "<table class=\"table table-striped database-table\">";
+    echo "<thead>";
+    echo "<tr>";
+    echo "<th scope=\"col\">#</th>"; //The # is the name of the field for row number
+
+    //Echo each field name in the table
+    while ($field = mysqli_fetch_field($data)) {
+        echo "<th scope=\"col\">" . $field->name . "</th>";
+    }
+
+    echo "</tr>";
+    echo "</thead>";
+    echo "<tbody>";
+
+    $row_count = 0;
+    $last_row = null;
+    while($row = mysqli_fetch_assoc($data)) { //For every single row in the SQL table
+        $row_count++;
+
+        echo "<tr>"; //Start row
+        echo "<td scope=\"row\">" . $row_count ."</td>"; //Echo the row number
+
+        foreach ($row as $value) { //Go through each field and echo the value
+            echo "<td>" . $value . "</td>";
+        }
+
+        echo "</tr>"; //End row
+        $last_row = $row;
+    }
+
+    echo "</tbody>";
+    echo "</table>";
+}
+
+if (!isset($_GET["token"])) {
     $lost = true;
 } else { //Load token and user details
     global $database, $TABLE_LOGINS, $TABLE_TOKENS;
 
-    $query = "SELECT * FROM $TABLE_LOGINS WHERE `Password` = '$token'";
+    $token = $_GET["token"];
+
+    if (strlen($token) > 32) {
+        $token = substr($token, 0, 32);
+        header("Location: view.php?token=" . $token);
+    }
+
+    $query = "SELECT * FROM $TABLE_TOKENS WHERE `Token` = '$token'";
     $result = $database->query($query);
 
 
@@ -53,26 +116,24 @@ if (!isset($_GET["token"]) || !isValidToken($_GET["token"])) {
         showErrorPage();
         return;
     }
+    if ($result->num_rows <= 0) { //If there is nothing in the returned query
+        $lost = true;
+    } else {
+		$row = $result->fetch_assoc(); //Fetch first bit of data, which is the only bit of data
 
-    $query = "SELECT * FROM $TABLE_TOKENS WHERE `UserID` = " . $result->fetch_assoc()["UserID"] ;
-    $result2 = $database->query($query);
+		$queryNo = $row["QueryID"];
+		$title = $row["Title"];
+		$parameters = $row["Parameters"];
 
-    if (!$result2) { //If this fails, which it shouldn't. However if it does, show this error page.
-        debug("Error from the database while fetching token queries: " . $database->error);
-        showErrorPage();
-        return;
-    }
+		if ($parameters == "") {
+		    $parameters = 0;
+        }
 
-    session_start(); //Session time!
+		session_start(); //Start sessions
 
-    //Don't load a new session if an existing user exists. If we did this, an existing user viewing the page will be logged out
-    if (!isset($_SESSION["email"]) || $_SESSION["email"] == $result->fetch_assoc()["Email"]) {
-        $_SESSION["email"] = $result->fetch_assoc()["Email"];
-        $_SESSION["firstname"] = $result->fetch_assoc()["FirstName"];
-        $_SESSION["lastname"] = $result->fetch_assoc()["LastName"];
-        //$_SESSION["Permission"] = $result->fetch_assoc()["Permission"]; //No longer needed
-        $_SESSION["readquery"] = $result2->fetch_assoc()["ReadQuery"];
-        $_SESSION["writequery"] = $result2->fetch_assoc()["WriteQuery"];
+		if (!isset($_SESSION["token"])) { //Load the token into their session so that queries to dbquery.php are allowed
+			$_SESSION["token"] = $token;
+		}
     }
 
 }
@@ -95,7 +156,7 @@ if (!isset($_GET["token"]) || !isValidToken($_GET["token"])) {
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
 
-    <title>Space Camp Data Editor</title>
+    <title>Space Camp Registrations Viewer</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -104,8 +165,9 @@ if (!isset($_GET["token"]) || !isValidToken($_GET["token"])) {
     <link href="../css/admin/basic.css" rel="stylesheet">
     <link href="../css/admin/login.css" rel="stylesheet">
     <link href="../css/admin/dashboard.css" rel="stylesheet">
+    <link href="../css/view.css" rel="stylesheet">
 
-    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="../favicon.ico">
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/bootstrap.bundle.js"></script>
@@ -117,54 +179,65 @@ if (!isset($_GET["token"]) || !isValidToken($_GET["token"])) {
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script>var query = "<?php
+    <?php
         if (!$lost) {
-            echo $_SESSION["readquery"];
+            echo "<script>var database = {}; database.queryno = $queryNo; database.parameters = $parameters;</script>";
         }
-    ?>";</script>
+    ?>
+    <script src="../js/databasetable.js"></script>
     <script src="../js/view.js"></script>
-    <style>
-        body {
-            background-color: #F0F0F0;
-        }
-
-        .dbtable {
-            overflow: scroll;
-            max-height: 300px;
-            min-height: 40px;
-        }
-
-        #downloadCSV {
-            float: right;
-            margin: 30px 0px 30px 0px;
-        }
-    </style>
 </head>
 <body>
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Space Camp Data Editor</a>
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Space Camp Registrations</a>
     <!--<div class="form-control form-control-dark w-100"></div>-->
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="nav-link" id="welcomeDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome, <?php
-                if (isset($_SESSION["firstname"])) {
-                    echo $_SESSION["firstname"];
-                } else {
-                    echo "User";
-                }
 
-            ?>!</a>
         </li>
         <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#tabbedSideBar" aria-controls="tabbedSideBar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>-->
     </ul>
 </nav>
-<div class="" style="margin: 30px 30px 30px 30px;">
-    <div id="databaseTable" class="dbtable"><h3>Loading content...</h3></div>
-    <input type="button" id="downloadCSV" class="btn btn-lg btn-primary" value="Download as CSV">
-</div>
 
+
+<div class="" style="margin: 30px 30px 30px 30px;">
+    <div class="header">
+        <h3 class="pb-2" style="display: inline-block"><?php echo $title; ?></h3>
+        <input type="button" id="downloadCSV" class="btn btn-lg btn-primary" <?php  if ($lost) echo "disabled" ?> value="Download as CSV">
+    </div>
+    <div id="databaseTable" class="dbtable"><?php
+        if ($lost) {
+            echo "<h4>Cannot load due to invalid token!</h4>";
+        } else {
+			if ($queryNo == "0") $query = getRegistrationQuery();
+			else if ($queryNo == "1") {
+				if ($parameters == "" || $parameters == null) {
+					echo "<h4>Error: No company parameter given!</h4>";
+					return;
+				} else if (!intval($parameters)) {
+					echo "<h4>Error: Company parameter must be an int!</h4>";
+					return;
+				}
+				$query = getRegistrationsByCompanyQuery(intval($parameters));
+			} else if ($queryNo == "2") {
+				$query = getRecentRegistrations();
+			} else if ($queryNo == "3") {
+				$query = getDietaryRegistrations();
+			} else if ($queryNo == "4") {
+				$query = getMedicalRegistrations();
+			} else {
+				echo "<h4>Error: Unknown common query with ID $queryNo!</h4>";
+				return;
+			}
+
+			createDatabaseTable($query);
+        }
+
+    ?>
+    </div>
+</div>
 <?php
 if ($lost) {
     echo '<div class="modal" tabindex="-1" role="dialog" id="lostModal">
@@ -176,7 +249,7 @@ if ($lost) {
                 <div class="modal-body container">
                     <div class="">
                         <p style="float: right; margin-left: 20px; margin-right: 20px;"><img src="../img/lost.png" width="200px"></p>
-                        <h5 style="font-weight: normal">You seem to have ended up in the wrong place by accident! If you are sure you are in the right place, please contact Toby to sort this issue.</h5>
+                        <h5 style="font-weight: normal">You seem to have ended up in the wrong place by accident! If you are sure you are in the right place, please contact <a href="mailto:strange.toby@gmail.com">Toby</a> to sort this issue.</h5>
                     </div>
     
                 </div>
@@ -189,8 +262,6 @@ if ($lost) {
     <script>$(document).ready(function() {
         $("#lostModal").modal("show");
     });</script>';
-} else {
-
 }
 ?>
 

@@ -13,10 +13,12 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 }
 
 session_start();
-if (!(isset($_SESSION["email"]))) {
+if (!(isset($_SESSION["email"])) && !isset($_SESSION["token"])) {
     echo "<h4>Error: Could not authenticate!</h4>";
     return;
 }
+
+$loggedIn = isset($_SESSION["email"]);
 
 $open = true; //So the database doesn't complain that we are using it incorrectly and give us a 403
 global $open;
@@ -40,6 +42,31 @@ if (!isset($_POST["query"]) && !isset($_POST["queryno"])) {
     return;
 }
 
+function verifyTokenQuery() {
+	global $TABLE_TOKENS, $database;
+	$token = $_SESSION["token"];
+
+	if (isset($_POST["query"])) return false; //If they are just asking for a non-common query, deny them
+	$query = "SELECT * FROM $TABLE_TOKENS WHERE `Token` = '$token'";
+	$result = $database->query($query);
+
+	if (!$result) {
+		return false; //This shouldn't really happen but oh well
+	}
+
+	$row = $result->fetch_assoc();
+	$params = $row["Parameters"];
+	$queryno = $row["QueryID"];
+
+
+	//If there is required parameters and either none have been provided or they don't match, return false
+	if ($params != "" && (!isset($_POST["parameters"]) || $_POST["parameters"] != $params)) return false;
+
+	if ($queryno != $_POST["queryno"]) return false;
+
+	return true; //Every other check has passed so return true
+}
+
 function validateQuery($query) {
     $query = explode(";", $query)[0]; //Only run the first query
     $query = trim($query);
@@ -56,6 +83,8 @@ function validateQuery($query) {
 
     return true;
 }
+
+
 
 /**
  * Creates an HTML table based on the provided SQL query object. Does not
@@ -131,6 +160,11 @@ function createCSV($data, $headers) {
 
         $bool = false;
         foreach ($row as $value) {
+        	$value = str_replace("\r\n", ", ", $value);
+			$value = str_replace("\n", ", ", $value);
+			if (strpos($value, ',') !== false) {
+				$value = "\"" . $value . "\""; //Escape the value in quotes as it has commas in it
+			}
             $csv_body .= !$bool ? $value : "," . $value; //Add each value from each column
             $bool = true; //Mark first column done, so start appending ', ' before each value now
         }
@@ -139,16 +173,21 @@ function createCSV($data, $headers) {
     echo $csv_body;
 }
 
+if (!$loggedIn && !verifyTokenQuery()) {
+	echo "<h4>Error: You do not have permission to run queries outside of the one you were given!</h4>";
+}
+
 include("../scripts/commonqueries.php");
 
 if (isset($_POST["query"])) {
-    $query = $_POST["query"];
+    $query = $database->real_escape_string($_POST["query"]);
 } else {
     $queryno = strval($_POST["queryno"]);
-    if (count(explode("_", $queryno, 2)) > 1) { //If the query has a parameter
+    /*if (count(explode("_", $queryno, 2)) > 1) { //If the query has a parameter
         $param = explode("_", $queryno, 2)[1];
         $queryno = explode("_", $queryno, 2)[0];
-    }
+    }*/
+    $param = isset($_POST["parameters"]) ? $_POST["parameters"] : "";
 
     if ($queryno == "0") $query = getRegistrationQuery();
     else if ($queryno == "1") {
@@ -162,7 +201,11 @@ if (isset($_POST["query"])) {
         $query = getRegistrationsByCompanyQuery(intval($param));
     } else if ($queryno == "2") {
     	$query = getRecentRegistrations();
-	}  else {
+	} else if ($queryno == "3") {
+		$query = getDietaryRegistrations();
+	} else if ($queryno == "4") {
+		$query = getMedicalRegistrations();
+	} else {
         echo "<h4>Error: Unknown common query with ID $queryno!</h4>";
         return;
     }
@@ -173,7 +216,7 @@ if (isset($_POST["query"])) {
 if (!validateQuery($query)) { //Check token permissions and query legitstics, etc
     return;
 }
-$data = runQuery($database->real_escape_string($query));
+$data = runQuery($query);
 
 if (is_string($data)) {
     echo "<h4>Query Error: " . getLastError() . "</h4>";
