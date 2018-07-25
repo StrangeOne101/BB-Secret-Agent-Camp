@@ -52,6 +52,10 @@ function getRegistrationsByCompanyQuery($companyID) {
 	"$TABLE_REGISTRATIONS.RegisteeType = $TABLE_TYPES.TypeID WHERE $TABLE_REGISTRATIONS.CompanyUnit = $companyID ORDER BY ID DESC";
 }
 
+/**
+ * Gets a query for all registrations that have dietary requirements
+ * @return string
+ */
 function getDietaryRegistrations() {
 	global $TABLE_REGISTRATIONS, $TABLE_COMPANIES, $TABLE_TYPES;
 	return "SELECT $TABLE_REGISTRATIONS.FirstName, $TABLE_REGISTRATIONS.LastName, $TABLE_COMPANIES.CompanyName AS Company, " .
@@ -59,11 +63,24 @@ function getDietaryRegistrations() {
 		"$TABLE_REGISTRATIONS.RegisteeType = $TABLE_TYPES.TypeID WHERE $TABLE_REGISTRATIONS.FoodDetails != \"\" ORDER BY TypeID, Company, LastName, FirstName";
 }
 
+/**
+ * Gets a query for all registrations that have medical conditions
+ * @return string
+ */
 function getMedicalRegistrations() {
 	global $TABLE_REGISTRATIONS, $TABLE_COMPANIES, $TABLE_TYPES;
 	return "SELECT $TABLE_REGISTRATIONS.FirstName, $TABLE_REGISTRATIONS.LastName, $TABLE_COMPANIES.CompanyName AS Company, " .
 		"$TABLE_TYPES.TypeName AS Type, " . "$TABLE_REGISTRATIONS.MedicalDetails " . "FROM $TABLE_REGISTRATIONS INNER JOIN $TABLE_COMPANIES ON $TABLE_REGISTRATIONS.CompanyUnit = $TABLE_COMPANIES.CompanyID INNER JOIN $TABLE_TYPES ON " .
 		"$TABLE_REGISTRATIONS.RegisteeType = $TABLE_TYPES.TypeID WHERE $TABLE_REGISTRATIONS.MedicalDetails != \"\" ORDER BY TypeID, Company, LastName, FirstName";
+}
+
+/**
+ * Gets a query to get all company data. DO NOT DELETE. Required for things that fetch the companies. E.g. The Registration Form
+ * @return string The query
+ */
+function getCompanies() {
+	global $TABLE_COMPANIES;
+	return "SELECT * FROM $TABLE_COMPANIES";
 }
 
 ?>
