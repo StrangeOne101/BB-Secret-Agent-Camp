@@ -175,6 +175,7 @@ function createCSV($data, $headers) {
 
 if (!$loggedIn && !verifyTokenQuery()) {
 	echo "<h4>Error: You do not have permission to run queries outside of the one you were given!</h4>";
+	return;
 }
 
 include("../scripts/commonqueries.php");
