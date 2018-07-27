@@ -179,7 +179,7 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
 				. "Phone: $phone\r\n" . "MobilePhone: $phonemobile\r\n" . "Company (int): $company\r\n" . "Company: $companies[$company]\r\n"
 				. "ContactName: $ecname\r\n" . "ContactPhone: $ecphone\r\n" . "Medical Details: $medical\r\n" . "Food Details: $food\r\n"
 				. "Type: " . $type . "\r\n" . "RefNo: $refno\r\n" . "CadetID: $agentID\r\n"
-				. "Date: $date\r\n";
+				. "Date: $date\r\nPhotoPerm: $photoPerm\r\n";
 			sendErrorEmail($data, $database->error);
 			header("Location: error.php");
 			exit();
@@ -213,7 +213,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$ecname = $_POST["ecname"];
 	$ecphone = $_POST["ecphone"];
 	$personType = $_POST["type"];
-	$photoPerm = isset($_POST["photoperm"]);
+	$photoPerm = isset($_POST["photoperm"]) ? 1 : 0; //For some reason, isset is not ever returning false so we have to specifiy it
 
 
 	$response = $_POST["g-recaptcha-response"];
