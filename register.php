@@ -289,9 +289,9 @@ function validate($input, $type = 0) {
  * @return string The input, but filtered
  */
 function filterNil($input) {
-    $filter = array("nil", "nothing", "none", "na", "n/a", "-", "null", "same as above", "see above");
+    $filter = array("nil", "nothing", "none", "na", "n/a", "-", "null", "same as above", "see above", "no");
     for ($i = 0; $i < count($filter); $i++) {
-        if (strcasecmp($input, $filter[$i]) == 0) {
+        if (strcasecmp(trim($input), $filter[$i]) == 0) {
             return "";
         }
     }
