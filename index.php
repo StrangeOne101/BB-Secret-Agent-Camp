@@ -89,8 +89,8 @@ global $days;
                 <img src="img/header_t.png" width="80%">
                 <h3 style="margin-top: -20px">SPACE CAMP! LIFT OFF IN <?php echo $days?> DAYS!</h3>
             </div>
-            <input id="register-btn" type="button" class="btn btn-large btn-lg" title="Register" value="Register Here!" onclick="document.location='/register.php'">
-			<h4>Registrations <?php
+            <input id="register-btn" type="button" disabled class="btn btn-large btn-lg" title="Register" value="Registrations closed!" style="border: 8px solid #505050; color: #505050">
+			<!-- <h4>Registrations <?php
                 if ($days > 7) {
                     echo "close in " . ($days - 7) . " day" . (($days - 7) == 1 ? "" : "s") . "!";
                 } else if ($days == 7) {
@@ -98,7 +98,8 @@ global $days;
                 } else {
                     echo "closed!";
                 }
-                ?></h4>
+                ?></h4> -->
+            <h4 style="font-size: 48px;">The shuttle's left already, contact us at <a href="mailto:info@spacecamp.co.nz">info@spacecamp.co.nz</a> and we might be able to beam you up.</h4>
 		</div>
 		<div class="admin-buttons"><form action="/admin"><input type="submit" class="btn btn-large btn-danger invisible" value="Admin Panel"/></form></div>
 	</div>
