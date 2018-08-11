@@ -79,7 +79,7 @@ if ($message == "") {
        	<link href="../css/admin/basic.css" rel="stylesheet">
        	<link href="../css/admin/login.css" rel="stylesheet">
        	
-        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="shortcut icon" href="../favicon.ico">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="../js/debug.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

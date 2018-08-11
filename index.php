@@ -23,11 +23,12 @@ if(isset($_SESSION['username'])){
     
 }
 
-$start = "2018-08-18";
+$start = "2018-08-17";
+$timeOffset = $_SERVER["HTTP_HOST"] != "localhost" ? "+12 hours" : ""; //Offset is +12 hours, but is not offset when hosted locally
 
 //header("Location: register.php");
 
-$your_date = strtotime($start);
+$your_date = strtotime($start . " " . $timeOffset);
 $datediff = $your_date - time();
 
 $days = floor($datediff / (60 * 60 * 24));
@@ -89,7 +90,15 @@ global $days;
                 <h3 style="margin-top: -20px">SPACE CAMP! LIFT OFF IN <?php echo $days?> DAYS!</h3>
             </div>
             <input id="register-btn" type="button" class="btn btn-large btn-lg" title="Register" value="Register Here!" onclick="document.location='/register.php'">
-			
+			<h4>Registrations <?php
+                if ($days > 7) {
+                    echo "close in " . ($days - 7) . " day" . (($days - 7) == 1 ? "" : "s") . "!";
+                } else if ($days == 7) {
+					echo "close today! Hurry!";
+                } else {
+                    echo "closed!";
+                }
+                ?></h4>
 		</div>
 		<div class="admin-buttons"><form action="/admin"><input type="submit" class="btn btn-large btn-danger invisible" value="Admin Panel"/></form></div>
 	</div>
