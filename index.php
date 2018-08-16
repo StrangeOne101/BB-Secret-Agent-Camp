@@ -23,7 +23,8 @@ if(isset($_SESSION['username'])){
     
 }
 
-$start = "2018-08-17";
+$startHour = 18; //6PM
+$start = "2018-08-17 +" . ($startHour - 10) . " hours";
 $timeOffset = $_SERVER["HTTP_HOST"] != "localhost" ? "+12 hours" : ""; //Offset is +12 hours, but is not offset when hosted locally
 
 //header("Location: register.php");
@@ -87,7 +88,30 @@ global $days;
 
             <div id="banner">
                 <img src="img/header_t.png" width="80%">
-                <h3 style="margin-top: -20px">SPACE CAMP! LIFT OFF IN <?php echo $days?> DAYS!</h3>
+                <h3 style="margin-top: -20px"><?php
+                    if ($days >= 1) {
+                        echo "SPACE CAMP! LIFT OFF IN ";
+                        echo $days . " DAY" . ($days == 1 ? "" : "S");
+                    } else {
+                        global $datediff;
+
+                        $hours = floor($datediff / (60 * 60));
+                        $mins = floor($datediff / (60));
+
+                        if ($hours >= 1) {
+                            echo "SPACE CAMP! LIFT OFF IN ";
+                            echo ($hours + 1) . " HOUR" . ($hours == 1 ? "" : "S");
+                        } else if ($mins >= 1) {
+							echo "SPACE CAMP! LIFT OFF IN ";
+							echo $mins . " MINUTE" . ($mins == 1 ? "" : "S");
+                        } else if ($days >= -2) {
+                            echo "SPACE CAMP ONGOING! WOOHOO";
+                        } else {
+                            echo "SPACE CAMP OVER! THANKS FOR COMING";
+                        }
+                    }
+                    echo "!";
+                    ?></h3>
             </div>
             <input id="register-btn" type="button" disabled class="btn btn-large btn-lg" title="Register" value="Registrations closed!" style="border: 8px solid #505050; color: #505050">
 			<!-- <h4>Registrations <?php
