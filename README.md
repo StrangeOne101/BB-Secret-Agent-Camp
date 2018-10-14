@@ -1,4 +1,4 @@
-# BB-Secret-Agent-Camp
+# BB Team Section Camp
 A repo for the online site used to register for the 2017 Team Section Camp, known as "Secret Agent Camp". In 2018 it was updated to be used for "Space Camp" and was developed in PHP.
 
 This was my first real site I've developed in PHP. It could do the following:
