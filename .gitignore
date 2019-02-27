@@ -71,8 +71,8 @@ $RECYCLE.BIN/
 #Admin Stuff
 admin/ARCHIVE/*
 .idea/php.xml
-
+img/gallery/*.jpg
 img/gallery/*.png
 img/gallery/*.jpeg
 img/gallery/thumb/*
-
+img/gallery/captions.txt
