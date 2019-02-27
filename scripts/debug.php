@@ -4,13 +4,13 @@ if (!(isset($open) && $open)) {
     exit;
 }
 
-if (!isset($debugVal)) {
-    $debugVal = false;
-}
+//if (!isset($debugVal)) {
+    $debugVal = true;
+//}
 
-if (!isset($totalErrorsOnPage)) {
+//if (!isset($totalErrorsOnPage)) {
     $totalErrorsOnPage = array();
-}
+//}
 
 /**
  * Print some debug. Use <code>debug()</code> in the console of
@@ -18,7 +18,7 @@ if (!isset($totalErrorsOnPage)) {
  * debug is enabled.
  * @param string $data The data to print
  */
-if (!function_exists("debug")) {
+//if (!function_exists("debug")) {
     function debug($data) {
         global $debugVal;
         global $totalErrorsOnPage;
@@ -27,13 +27,13 @@ if (!function_exists("debug")) {
         }
         array_push($totalErrorsOnPage, $data);
     }
-}
+//}
 
 /**
  * Gets the total amount of errors that have occured within all
  * PHP scripts. 
  */
-if (!function_exists("getErrors")) {
+//if (!function_exists("getErrors")) {
     function getErrors() { 
         global $totalErrorsOnPage;
         $totalErrors = "";
@@ -46,5 +46,5 @@ if (!function_exists("getErrors")) {
         }
         return "";
     }
-}
+//}
 ?>
