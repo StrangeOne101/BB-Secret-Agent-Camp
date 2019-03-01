@@ -19,8 +19,8 @@ if (isset($_GET["token"])) {
 $open = true;
 global $open;
 
-include("../scripts/debug.php");
-include("../scripts/database.php");
+include_once("../scripts/debug.php");
+include_once("../scripts/database.php");
 
 if (!isReady()) { //If the database is broken. If so... fek
     header("Location: index.php"); //Shows error message
@@ -75,18 +75,18 @@ checkToken($token);
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
 
-    <title>Space Camp | Admin Signup</title>
+    <title>C&R Camp | Admin Signup</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="../css/admin/basic.css" rel="stylesheet">
-    <link href="../css/admin/login.css" rel="stylesheet">
+    <link href="css/basic.css" rel="stylesheet">
+    <link href="css/login.css" rel="stylesheet">
 
     <link rel="shortcut icon" href="favicon.ico">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../js/invite.js"></script>
+    <script src="js/invite.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

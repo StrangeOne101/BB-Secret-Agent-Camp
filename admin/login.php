@@ -8,8 +8,8 @@ if((!isset($_SERVER["HTTPS"]) || $_SERVER["HTTPS"] != "on") && $_SERVER["HTTP_HO
 $open = true;
 global $open;
 
-include("../scripts/debug.php");
-include("../scripts/database.php");
+include_once("../scripts/debug.php");
+include_once("../scripts/database.php");
 
 $message = "";
 
@@ -76,8 +76,8 @@ if ($message == "") {
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     
         <!-- Custom CSS -->
-       	<link href="../css/admin/basic.css" rel="stylesheet">
-       	<link href="../css/admin/login.css" rel="stylesheet">
+       	<link href="css/basic.css" rel="stylesheet">
+       	<link href="css/login.css" rel="stylesheet">
        	
         <link rel="shortcut icon" href="../favicon.ico">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

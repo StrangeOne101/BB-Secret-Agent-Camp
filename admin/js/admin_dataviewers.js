@@ -52,7 +52,12 @@ function updateLinks() {
 	$.post("dbquery.php", {
 		query: "SELECT Title, Token AS Link FROM tbl_tokens"
 	}, function(data,status) {
-		$("#dataViewerTable").html(data);
+		if (data["response-code"] != 200) {
+			console.log(data["response-code"] + ": " + data["message"]);
+			return;
+		}
+
+		$("#dataViewerTable").html(data["data"]);
 
 		var table = $("#dataViewerTable").children("table")[0];
 

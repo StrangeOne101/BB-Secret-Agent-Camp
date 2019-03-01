@@ -9,8 +9,16 @@ $(document).ready(function() {
 	}, function(data,status) {
 		var html = "";
 		var dropDownHTML = "";
-		for (var i in data.split("\r\n")) { //For every row
-			var s = data.split("\r\n")[i];
+
+		if (data["response-code"] != 200) {
+			console.log(data["response-code"] + ": " + data["message"]);
+			return;
+		}
+
+		var table = data["data"];
+
+		for (var i in table.split("\r\n")) { //For every row
+			var s = table.split("\r\n")[i];
 			html = html + "<option value=\"" + s.split(",")[0] + "\">" + s.split(",")[1] + "</option>";
 			dropDownHTML = dropDownHTML + "<a class='dropdown-item' href='#' value='" + s.split(",")[0] + "'>" + s.split(",")[1] + "</a>";
 		}

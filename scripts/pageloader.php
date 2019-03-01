@@ -9,16 +9,14 @@ if (!(isset($open) && $open)) {
  * Returns the content of the file, or nothing
  * if not found.
  */
-if (!function_exists("loadPage")) {
-    function loadPage($name) {
-        $myfile = fopen($name, "r");
-        if ($myfile == null) {
-            debug("Unable to find page to load named $name");
-            return "";
-        }
-        return fread($myfile,filesize($name));
-        fclose($myfile);
-    }
+function loadPage($name) {
+	$myfile = fopen($name, "r");
+	if ($myfile == null) {
+		debug("Unable to find page to load named $name");
+		return "";
+	}
+	return fread($myfile,filesize($name));
+	fclose($myfile);
 }
 
 ?>

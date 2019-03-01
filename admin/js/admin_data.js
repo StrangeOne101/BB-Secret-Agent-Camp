@@ -16,7 +16,12 @@ function updateRegistrationData() {
 	$.post("dbquery.php", {
 		queryno: 0 //Common query no. 1 - Get all registration data
 	}, function(data,status) {
-		$("#tableWrapper_registeredUsers").html(data);
+		if (data["response-code"] != 200) {
+			console.log(data["response-code"] + ": " + data["message"]);
+			return;
+		}
+
+		$("#tableWrapper_registeredUsers").html(data["data"]);
 
 		var table = $("#tableWrapper_registeredUsers").children("table")[0];
 		shortenLongFields(table);
@@ -32,7 +37,11 @@ function updateMD5(callback) {
 		queryno: 0,
 		refresh: true
 	}, function(data) {
-		var json = JSON.parse(data);
+		if (data["response-code"] != 200) {
+			console.log(data["response-code" + ": " + data["message"]]);
+			return;
+		}
+		var json = JSON.parse(data["data"]);
 		if (json.hashcode != registrationDataMD5) {
 			var oldData = registrationDataMD5;   //We store the old data before checking it so we can
 			registrationDataMD5 = json.hashcode; //call the callback after it's already been updated

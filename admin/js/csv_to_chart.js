@@ -16,13 +16,14 @@ function convertCSVToChart(query, title, chartDivId, threeD, type) {
 		query: query,
 		csv: true,
 	}, function(data, status) {
-		if (data.startsWith("<h4>")) { //If the data returned an error, just display the error in the html
-			$("#" + chartDivId).html(data);
+		if (data["response-code"] != 200) { //If the data returned an error, just display the error in the html
+			console.log(data["response-code"] + ": " + data["message"]);
+			$("#" + chartDivId).html("<h4>Error " + data["response-code"] + ": " + data["message"] + "</h4>");
 			return;
 		}
 
-		var headers = data.split("\n")[0]; //The first line is the column names
-		var types = data.split("\n")[1];   //The second line is the data, and we use this to test types
+		var headers = data["data"].split("\n")[0]; //The first line is the column names
+		var types = data["data"].split("\n")[1];   //The second line is the data, and we use this to test types
 		var dataTable = new google.visualization.DataTable();
 
 		//Loop through all columns and add them to the dataTable (to give to the pie chart)
@@ -41,9 +42,9 @@ function convertCSVToChart(query, title, chartDivId, threeD, type) {
 		}
 
 		var rows = [];
-		for (var i = 1; i < data.split("\n").length; i++) { //Loop through all lines
+		for (var i = 1; i < data["data"].split("\n").length; i++) { //Loop through all lines
 			var row = [];
-			var line = data.split("\n")[i]; //Current line
+			var line = data["data"].split("\n")[i]; //Current line
 
 			for (var j = 0; j < line.split(",").length; j++) { //Loop through all values and add them to the array
 				var value = line.split(",")[j];

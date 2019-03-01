@@ -1,6 +1,6 @@
 Hi $firstname,
 
-You've been registered to help administrate Space Camp! This means that you can view registrations, check statistics, and lots of other things.
+You've been registered to help administrate Cops and Robbers Camp! This means that you can view registrations, check statistics, and lots of other things.
 
 To finish joining, click the following link (or copy and paste it into your browser) and create yourself a password.
 <a href="$token">$token</a>
@@ -10,4 +10,4 @@ The link must be activated within 24 hours. If it has expired or doesn't work, p
 Thanks,
 Toby
 
-<i>This is an automated message sent by the Space Camp Admin Panel. If you believe this was a mistake, please ignore the message or contact us/reply to this message.</i>
+<i>This is an automated message sent by the C&R Camp Admin Panel. If you believe this was a mistake, please ignore the message or contact us/reply to this message.</i>

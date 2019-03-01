@@ -8,7 +8,7 @@ if(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "on" && $_SERVER["HTTP_HOST"
 $open = true;
 global $open;
 
-include("../scripts/debug.php");
+include_once("../scripts/debug.php");
 
 session_start();
 

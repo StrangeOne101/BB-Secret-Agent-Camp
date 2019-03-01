@@ -5,7 +5,7 @@ if (!(isset($open) && $open)) {
 }
 
 
-include('debug.php');
+include_once('debug.php');
 
 $ready = false;
 $database = null;

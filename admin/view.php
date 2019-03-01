@@ -13,13 +13,13 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") { //GET only
 $open = true; //So the database doesn't complain that we are using it incorrectly and give us a 403
 global $open;
 
-include("../scripts/debug.php");
+include_once("../scripts/debug.php");
 
 global $debugVal;
 $debugVal = false; //So debug doesn't echo
 
-include("../scripts/database.php");
-include("../scripts/commonqueries.php");
+include_once("../scripts/database.php");
+include_once("../scripts/commonqueries.php");
 //Start of the real stuff and not just imports
 
 $lost = false;
@@ -156,16 +156,16 @@ if (!isset($_GET["token"])) {
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
 
-    <title>Space Camp Registrations Viewer</title>
+    <title>Cops and Robbers Camp Registrations Viewer</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="../css/admin/basic.css" rel="stylesheet">
-    <link href="../css/admin/login.css" rel="stylesheet">
-    <link href="../css/admin/dashboard.css" rel="stylesheet">
-    <link href="../css/view.css" rel="stylesheet">
+    <link href="css/basic.css" rel="stylesheet">
+    <link href="css/login.css" rel="stylesheet">
+    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="css/view.css" rel="stylesheet">
 
     <link rel="shortcut icon" href="../favicon.ico">
     <script src="../js/jquery.min.js"></script>
@@ -185,7 +185,7 @@ if (!isset($_GET["token"])) {
         }
     ?>
     <script src="../js/databasetable.js"></script>
-    <script src="../js/view.js"></script>
+    <script src="js/view.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">

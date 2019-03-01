@@ -8,12 +8,12 @@ if(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "on" && $_SERVER["HTTP_HOST"
 $open = true;
 global $open;
 
-include("../scripts/debug.php");
+include_once("../scripts/debug.php");
 
 global $debugVal;
 $debugVal = false;
 
-include("../scripts/database.php");
+include_once("../scripts/database.php");
 
 
 if (isReady()) {
@@ -77,7 +77,7 @@ class AdminPage {
      */
     function generateJS() {
         if ($this->jsFile != null) {
-            return "<script src=\"../js/admin/" . $this->jsFile . ".js\"></script>";
+            return "<script src=\"./js/" . $this->jsFile . ".js\"></script>";
         }
         return "";
     }
@@ -88,7 +88,7 @@ class AdminPage {
      */
     function generateCSS() {
         if ($this->cssFile != null) {
-            return "<link rel=\"stylesheet\" href=\"../css/admin/" . $this->cssFile . ".css\">";
+            return "<link rel=\"stylesheet\" href=\"./css/" . $this->cssFile . ".css\">";
         }
         return "";
     }

@@ -2,7 +2,11 @@ $(document).ready(function() {
     $.post("dbquery.php", {
         query: "SELECT * FROM tbl_logins"
     }, function(data,status) {
-        $("#tableWrapper_db_registeredAdminUsers").html(data);
+		if (data["response-code"] != 200) {
+			console.log(data["response-code"] + ": " + data["message"]);
+			return;
+		}
+        $("#tableWrapper_db_registeredAdminUsers").html(data["data"]);
     });
 
     $("#submitAdminSignup").click(function(event) {

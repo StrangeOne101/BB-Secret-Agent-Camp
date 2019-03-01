@@ -7,9 +7,9 @@
 $open = true;
 global $open;
 
-include("../scripts/debug.php");
-include("../scripts/database.php");
-include("../scripts/tokens.php");
+include_once("../scripts/debug.php");
+include_once("../scripts/database.php");
+include_once("../scripts/tokens.php");
 
 if (!isReady()) { //If the database is broken. If so... fek
 	header("Location: index.php");

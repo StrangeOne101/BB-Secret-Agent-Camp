@@ -2,7 +2,12 @@ function generateTable(query) {
     $.post("dbquery.php", {
         query: query
     }, function(data,status) {
-        return data;
+    	if (data["response-code"] == 200) {
+			return data["data"];
+		} else {
+    		return "<h4>Error " + data["response-code"] + ": " + data["message"] + "</h4>";
+		}
+
     });
 }
 

@@ -7,7 +7,12 @@ $(document).ready(function() {
     	sendObject.csv = true; //Set CSV to true
 
         $.post("dbquery.php", sendObject, function(data,status) {
-            let csvContent = "data:text/csv;charset=utf-8," + data;
+        	if (data["response-code"] != 200) {
+        		alert("Error " + data["response-code"] + ": " + data["message"]);
+        		return;
+			}
+
+            let csvContent = "data:text/csv;charset=utf-8," + data["data"];
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);

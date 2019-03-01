@@ -12,9 +12,59 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     return;
 }
 
+//TODO: Update all PHP scripts to use JSON response instead of HTML
+
+/***********************************
+ *       Response Code Table       *
+ *---------------------------------*
+ * Code |         Meaning          *
+ *----------------------------------
+ * 200  | Response is fine         *
+ * 210  | Hashcode response
+ * 400  | Not enough info          *
+ * 401  | Not authenticated        *
+ * 432  | Query is not safe        *
+ * 433  | Query error              *
+ * 500  | DB is down               *
+ ***********************************/
+
+/**
+ * Creates a JSON response with the appropriate error parameters
+ * @param integer $errorcode The error code
+ * @param string $errormessage The response error
+ * @param array $extradata Any extra data to include in the response
+ */
+function reply_error($errorcode, $errormessage, $extradata = array()) {
+	$data = array("response-code" => $errorcode, "message" => $errormessage);
+
+	$data = array_merge($data, $extradata);
+	header('Content-Type: application/json');
+	echo json_encode($data);
+}
+
+/**
+ * Creates a JSON response filled with the provided HTML table for the query
+ * @param string $table The HTML table
+ */
+function reply_table($table) {
+	$data = array("response-code" => 200, "message" => "", "data" => $table);
+	header('Content-Type: application/json');
+	echo json_encode($data);
+}
+
+/**
+ * Creates a JSON response for database refresh checks
+ * @param string $hashcode
+ */
+function reply_hashcode($hashcode) {
+	$data = array("response-code" => 210, "message" => "", "hashcode" => $hashcode);
+	header('Content-Type: application/json');
+	echo json_encode($data);
+}
+
 session_start();
 if (!(isset($_SESSION["email"])) && !isset($_SESSION["token"])) {
-    echo "<h4>Error: Could not authenticate!</h4>";
+    reply_error(401, "Authentication failed");
     return;
 }
 
@@ -23,22 +73,22 @@ $loggedIn = isset($_SESSION["email"]);
 $open = true; //So the database doesn't complain that we are using it incorrectly and give us a 403
 global $open;
 
-include("../scripts/debug.php");
+include_once("../scripts/debug.php");
 
 global $debugVal;
 $debugVal = false; //So debug doesn't echo
 
-include("../scripts/database.php");
+include_once("../scripts/database.php");
 
 global $database;
 
 if (!isReady()) { //The database isn't functioning
-    echo "<h4>Error: The database isn't functioning right now! No data can be read.</h4>";
+    reply_error(500, "Database unavailable; data cannot be read");
     return;
 }
 
 if (!isset($_POST["query"]) && !isset($_POST["queryno"])) {
-    echo "<h4>Error: No query provided!</h4>";
+    reply_error(400, "No query provided");
     return;
 }
 
@@ -74,7 +124,7 @@ function validateQuery($query) {
     $firstWord = explode(" ", $query)[0];
 
     if (strtolower($firstWord) != "select" && strtolower($firstWord) != "update") {
-        echo "<h4>Error: Invalid query! Query must be a select query!</h4>";
+        reply_error(432, "Invalid query. Query must be a SELECT query.");
         return false;
     }
 
@@ -92,41 +142,46 @@ function validateQuery($query) {
  * script is made for HTTP requests and not for viewing directly or for
  * use as a script.
  * @param mixed $data The SQL query object
+ * @return string The HTML table of the query
  */
 function createTable($data) {
 
-    echo "<table class=\"table table-striped database-table\">";
-    echo "<thead>";
-    echo "<tr>";
-    echo "<th scope=\"col\">#</th>"; //The # is the name of the field for row number
+	$reply = "";
+
+    $reply .= "<table class=\"table table-striped database-table\">";
+	$reply .= "<thead>";
+	$reply .= "<tr>";
+	$reply .= "<th scope=\"col\">#</th>"; //The # is the name of the field for row number
 
     //Echo each field name in the table
     while ($field = mysqli_fetch_field($data)) {
-        echo "<th scope=\"col\">" . $field->name . "</th>";
+		$reply .= "<th scope=\"col\">" . $field->name . "</th>";
     }
 
-    echo "</tr>";
-    echo "</thead>";
-    echo "<tbody>";
+	$reply .= "</tr>";
+	$reply .= "</thead>";
+	$reply .= "<tbody>";
 
     $row_count = 0;
     $last_row = null;
     while($row = mysqli_fetch_assoc($data)) { //For every single row in the SQL table
         $row_count++;
 
-        echo "<tr>"; //Start row
-        echo "<td scope=\"row\">" . $row_count ."</td>"; //Echo the row number
+		$reply .= "<tr>"; //Start row
+		$reply .= "<td scope=\"row\">" . $row_count ."</td>"; //Echo the row number
 
         foreach ($row as $value) { //Go through each field and echo the value
-            echo "<td>" . $value . "</td>";
+			$reply .= "<td>" . $value . "</td>";
         }
 
-        echo "</tr>"; //End row
+		$reply .= "</tr>"; //End row
         $last_row = $row;
     }
 
-    echo "</tbody>";
-    echo "</table>";
+	$reply .= "</tbody>";
+	$reply .= "</table>";
+
+	return $reply;
     //echo "<h3>Size of row: " . count($last_row) . "</h3>";
 }
 
@@ -138,6 +193,7 @@ function createTable($data) {
  */
 function createCSV($data, $headers) {
     $fieldnames = "";
+    $reply_data = "";
 
     //Echo the field names, if allowed
     if ($headers) {
@@ -146,7 +202,7 @@ function createCSV($data, $headers) {
             $fieldnames = $fieldnames == "" ? $field->name : $fieldnames . "," . $field->name;
         }
         $fieldnames .= "\r\n"; //Add a newline character
-        echo $fieldnames;
+        $reply_data .= $fieldnames;
     }
 
     $row_count = 0;
@@ -170,15 +226,16 @@ function createCSV($data, $headers) {
         }
     }
 
-    echo $csv_body;
+	$reply_data .= $csv_body;
+    return $reply_data;
 }
 
 if (!$loggedIn && !verifyTokenQuery()) {
-	echo "<h4>Error: You do not have permission to run queries outside of the one you were given!</h4>";
+	reply_error(401, "Unauthorized query."); //Query is not the one they are allowed to use
 	return;
 }
 
-include("../scripts/commonqueries.php");
+include_once("../scripts/commonqueries.php");
 
 if (isset($_POST["query"])) {
     $query = $database->real_escape_string($_POST["query"]);
@@ -193,10 +250,10 @@ if (isset($_POST["query"])) {
     if ($queryno == "0") $query = getRegistrationQuery();
     else if ($queryno == "1") {
         if (!isset($param) || $param == "" || $param == null) {
-            echo "<h4>Error: No company parameter given!</h4>";
+			reply_error(400, "No company parameter given");
             return;
         } else if (!intval($param)) {
-            echo "<h4>Error: Company parameter must be an int!</h4>";
+            reply_error(400, "Company parameter must be an integer");
             return;
         }
         $query = getRegistrationsByCompanyQuery(intval($param));
@@ -207,7 +264,7 @@ if (isset($_POST["query"])) {
 	} else if ($queryno == "4") {
 		$query = getMedicalRegistrations();
 	} else {
-        echo "<h4>Error: Unknown common query with ID $queryno!</h4>";
+		reply_error(400, "Unknown common query with ID $queryno");
         return;
     }
 
@@ -220,22 +277,26 @@ if (!validateQuery($query)) { //Check token permissions and query legitstics, et
 $data = runQuery($query);
 
 if (is_string($data)) {
-    echo "<h4>Query Error: " . getLastError() . "</h4>";
+    reply_error(433, "Query Error: " . getLastError());
     return;
 }
 
 
 if (isset($_POST["notable"]) || isset($_POST["csv"])) { //Return in CSV format
-    createCSV($data, !isset($_POST["noheaders"])); //No headers prevents the field names from being included
+    $reply = createCSV($data, !isset($_POST["noheaders"])); //No headers prevents the field names from being included
+
+	reply_table($reply); //Reply in JSON
 } else if (isset($_POST["refresh"])) {
 	$rows = array();
 	while($r = mysqli_fetch_assoc($data)) {
 		$rows[] = $r;
 	}
 	$hash = md5(json_encode($rows));
-	echo '{"hashcode":"' . $hash . '"}';
+	reply_hashcode($hash);
 } else {
-    createTable($data);
+    $reply = createTable($data);
+
+    reply_table($reply); //Reply in JSON.
 }
 
 
