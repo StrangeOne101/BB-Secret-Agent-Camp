@@ -80,3 +80,5 @@ vendor/*
 composer.json
 composer.lock
 img/gallery/captions.txt
+admin/config/stripe.ini
+admin/config/database.ini

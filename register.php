@@ -50,13 +50,15 @@ if (!isReady()) {
 }
 
 $result = runQuery(getCompanies());
-$companies = array();
+$companiesById = array();
+$companiesByOrder = array();
 $companiesPayToCompany = array();
 
 for ($i = 0; $i < $result->num_rows; $i++) {
 	$currentRow = $result->fetch_assoc();
-	$companies[$currentRow["CompanyID"]] = $currentRow["CompanyName"];
-	$companiesPayToCompany[$currentRow["CompanyID"]] = $currentRow["PayingAsCompany"];
+	$companiesById[$currentRow["CompanyID"]] = $currentRow["CompanyName"];
+	$companiesById[$currentRow["Order"]] = $currentRow["CompanyID"];
+	$companiesPayToCompany[$currentRow["CompanyID"]] = $currentRow["PayingAsCompany"] == 1 ? true : false;
 
 	if ($DEBUG) {
 	    echo $currentRow["CompanyID"] . " => " . $currentRow["CompanyName"] . "\n";
@@ -64,8 +66,9 @@ for ($i = 0; $i < $result->num_rows; $i++) {
 }
 
 
+
 if ($DEBUG) {
-    echo "<br>" . isset($companies["1"]) . " | " . isset($companies[1]);
+    echo "<br>" . isset($companiesById["1"]) . " | " . isset($companiesById[1]);
 }
 
 
@@ -80,6 +83,23 @@ function genRefNo() {
 		$refno = $refno . rand(0, 9);
 	}
 	return $refno;
+}
+
+/**
+ * Checks the database to see if the email previously exists
+ * @param $email string The email
+ * @return bool|string False if it doesn't exist, or the reference number if it does
+ */
+function email_exists_in_db($email) {
+    $SQL = "SELECT RefNo WHERE Email = '$email'";
+
+    $result = runQuery($SQL);
+
+    if ($result->num_rows > 0) {
+		return $result->fetch_assoc()["RefNo"];
+    }
+
+    return false;
 }
 
 /**
@@ -103,7 +123,7 @@ function genRefNo() {
 function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobile, $email, $company, $food, $medical, $ecname, $ecphone, $type, $photoPerm) {
 	try {
 
-	    global $TABLE_REGISTRATIONS, $database, $companies, $DEBUG;
+	    global $TABLE_REGISTRATIONS, $database, $companiesById, $DEBUG;
 
 		$temp = explode(" ", $name);
 		$lname = $temp[count($temp) - 1]; //Get the last word for the last name
@@ -116,7 +136,9 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
 		$addresstotal = str_replace("\n", ", ", $addresstotal);
 		$addresstotal = str_replace(" ,", ",", $addresstotal); //Fix the damn annoying extra spaces that are added per line
 
-		$refno = genRefNo();
+        $refno = email_exists_in_db("$email");
+
+		if ($refno == false) $refno = genRefNo();
 
 
 		$phone = str_replace(" ", "", $phone); //Cut out spaces from phone numbers
@@ -176,7 +198,7 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
 			debug("Failed to insert: " . $database->error);
 
 			$data = "FirstName: $fname\r\n" . "LastName: $lname\r\n" . "DOB: $dob\r\n" . "Email: $email\r\n" . "Address: $addresstotal\r\n"
-				. "Phone: $phone\r\n" . "MobilePhone: $phonemobile\r\n" . "Company (int): $company\r\n" . "Company: $companies[$company]\r\n"
+				. "Phone: $phone\r\n" . "MobilePhone: $phonemobile\r\n" . "Company (int): $company\r\n" . "Company: $companiesById[$company]\r\n"
 				. "ContactName: $ecname\r\n" . "ContactPhone: $ecphone\r\n" . "Medical Details: $medical\r\n" . "Food Details: $food\r\n"
 				. "Type: " . $type . "\r\n" . "RefNo: $refno\r\n" . "CadetID: $agentID\r\n"
 				. "Date: $date\r\nPhotoPerm: $photoPerm\r\n";
@@ -220,12 +242,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	
 	
 	if (!preg_match("/\w.*\s.*\w/", $name) || !filter_var($email, FILTER_VALIDATE_EMAIL) || empty($address) || empty($dob) || empty($postcode) || (empty($phone) ||
-            empty($phonemobile)) || empty($agentID) || empty($ecname) || empty($ecname) || !isset($companies[$company])) {
+            empty($phonemobile)) || empty($agentID) || empty($ecname) || empty($ecname) || !isset($companiesById[$company])) {
 				$validating = true;
 
 				if ($DEBUG) {
 				    echo empty($name) . "-" . empty($email) . "-" . empty($email) . "-" . empty($dob) . "-" . empty($phone) . "-";
-					echo empty($phonemobile) . "-" . empty($agentID) . "-" . empty($ecname) . "-" . !isset($companies[$company]);
+					echo empty($phonemobile) . "-" . empty($agentID) . "-" . empty($ecname) . "-" . !isset($companiesById[$company]);
 				    /*if (isset($companies[$company])) {
 				        echo "TRUE";
                     } if (!isset($companies[$company])) {
@@ -238,7 +260,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	    if (!checkCaptcha($response)) {
 	        $captchaValid = false;
 	    } else {
-	        register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobile, $email, $company, $food, $medical, $ecname, $ecphone, $personType, $photoPerm);
+			$_SESSION["require_payment"] = $companiesPayToCompany[$company];
+	        $_SESSION["carryover_email"] = $email;
+			$_SESSION["carryover_address"] = $address;
+			$_SESSION["carryover_postcode"] = $postcode;
+			$_SESSION["carryover_phone"] = $phone;
+			$_SESSION["carryover_phonemo"] = $phonemobile;
+			$_SESSION["carryover_econtact"] = $ecname;
+			$_SESSION["carryover_ecphone"] = $ecphone;
+
+			register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobile, $email, $company, $food, $medical, $ecname, $ecphone, $personType, $photoPerm);
 	    }
 	}
 	
@@ -260,7 +291,7 @@ if (empty($agentID)) {
 //3 = company
 
 function validate($input, $type = 0) {
-    global $companies;
+    global $companiesById;
 	if (!$GLOBALS['validating']) {
 		echo "class=\"form\"";
 		return;
@@ -271,7 +302,7 @@ function validate($input, $type = 0) {
 		$output = $output . "invalid-email";//Append 
 	} else if ($type == 2 && !preg_match("/\w.*\s.*\w/", $input)) {
 		$output = $output . "invalid-name";
-	} else if ($type == 3 && !isset($companies[$input])) {
+	} else if ($type == 3 && !isset($companiesById[$input])) {
 		$output = $output . "invalid-company";
 	}else if ($input == null || $input == "") {
 		$output = $output . "invalid";
@@ -388,8 +419,9 @@ function checkCaptcha($key) {
     	        	<select id="form-company" <?php validate($company, 3)?> name="company"  value="<?php echo $company?>">
     		        	<option value="0" disabled selected>** Please Select **</option>
     		        	<?php         							
-    		        		foreach ($companies as $key => $value) {
-    		        			echo "<option value='$key' " . ($company == $key ? "selected" : "") . ">" . $value . "</option>";
+    		        		foreach ($companiesByOrder as $order => $id) {
+    		        		    $name = $companiesById[$id];
+    		        			echo "<option value='$id' " . ($company == $id ? "selected" : "") . ">" . $name . "</option>";
     		        		}
     		        		?>
     	        	</select>
