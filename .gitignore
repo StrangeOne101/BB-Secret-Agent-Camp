@@ -74,5 +74,9 @@ admin/ARCHIVE/*
 img/gallery/*.jpg
 img/gallery/*.png
 img/gallery/*.jpeg
-img/gallery/thumb/*
+img/gallery/thumbs/*
+img/gallery/captions.txt
+vendor/*
+composer.json
+composer.lock
 img/gallery/captions.txt

@@ -126,7 +126,7 @@ if (isDBDataReady() == "" && $database == null) { //If there are no issues AND t
 
             //Table of all companies with basic IDs attached to them. For data saving purposes
             if (!tableExists($TABLE_COMPANIES)) { //Create the base table and insert all companies into it
-                $query = "CREATE TABLE $TABLE_COMPANIES (`CompanyID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `CompanyName` VARCHAR(40), `PayingAsCompany` BOOLEAN DEFAULT FALSE)";
+                $query = "CREATE TABLE $TABLE_COMPANIES (`CompanyID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `CompanyName` VARCHAR(40), `PayingAsCompany` BOOLEAN DEFAULT FALSE, `Order` INTEGER DEFAULT CompanyID)";
                 $database->query($query);
                 $query = "INSERT INTO $TABLE_COMPANIES (`CompanyName`) VALUES ('1st Ashburton'), ('1st Blenheim'), ('1st Christchurch'), ('2nd Christchurch'), ('4th Christchurch'), ('8th Christchurch'), ('14th Christchurch'), ('1st Rangiora'), ('2nd Rangiora'), "
                     . "('3rd Timaru'), ('1st Waimate'), ('Hornby ICONZ'), ('Lincoln ICONZ'), ('Oxford ICONZ'), ('Richmond ICONZ'), ('St Albans ICONZ'), ('Parklands ICONZ'), ('Westside ICONZ')";
@@ -140,14 +140,14 @@ if (isDBDataReady() == "" && $database == null) { //If there are no issues AND t
             if (!tableExists($TABLE_TYPES)) {
                 $query = "CREATE TABLE $TABLE_TYPES (`TypeID` TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, `TypeName` VARCHAR(20))";
                 $database->query($query);
-                $query = "INSERT INTO $TABLE_TYPES (`TypeName`) VALUES ('Child'), ('Parent Help'), ('Leader'), ('Other')";
+                $query = "INSERT INTO $TABLE_TYPES (`TypeName`) VALUES ('Child'), ('Parent Help'), ('Leader'), ('Other'), ('Organizer')";
                 $database->query($query);
                 debug("Table '$TABLE_TYPES' created in the database.");
             }
 
             //A table of all changes that will occur in this database
             if (!tableExists($TABLE_CHANGES)) {
-                $query = "CREATE TABLE $TABLE_CHANGES (`ID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `TableName` VARCHAR(30), `FieldName` VARCHAR(20), `ValueBefore` VARCHAR(512), `ValueAfter` VARCHAR(512), `ChangeTime` DATETIME)";
+                $query = "CREATE TABLE $TABLE_CHANGES (`ID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `TableName` VARCHAR(30), `FieldName` VARCHAR(20), `ValueBefore` VARCHAR(512), `ValueAfter` VARCHAR(512), `ChangeTime` DATETIME, `Changee` INTEGER UNSIGNED, `Reason` VARCHAR(512))";
                 $database->query($query);
                 debug("Table '$TABLE_CHANGES' created in the database.");
             }
