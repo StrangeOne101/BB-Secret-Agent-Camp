@@ -125,9 +125,9 @@ function register($name, $dob, $agentID, $address, $postcode, $phone, $phonemobi
 
 	    global $TABLE_REGISTRATIONS, $database, $companiesById, $DEBUG;
 
-		$temp = explode(" ", $name);
-		$lname = $temp[count($temp) - 1]; //Get the last word for the last name
-		$fname = implode(explode(" ", $name, -1)); //Re-stitch the words for the first name (but not the last name)
+        $temp = explode(" ", $name); //Explode the name string into an array of name part strings
+        $lname = array_pop($temp); //Get the last name by popping the last name part string from the array
+        $fname = implode(" ", $temp); //Get the first name by imploding the remaining name part strings together
 
 		$date = date("Y-m-d");
 		$newdob = date("Y-m-d", strtotime($dob)); //Convert the DOB from HTML fields to SQL type
