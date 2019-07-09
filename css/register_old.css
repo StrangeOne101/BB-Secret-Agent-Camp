@@ -1,0 +1,198 @@
+@font-face {
+	font-family: "Agency FB";
+	src: url(../fonts/AGENCYB.TTF) format("truetype");
+	src: url(../fonts/AGENCYB.TTF) format("woff");
+}
+
+html {
+	background: url("../img/stars.png") fixed;
+}
+
+h1 {
+	color: #F0F0F0;
+	font-size: 56px;
+	text-align: center;
+	font-family: "Agency FB";
+	font-shadow: 2px 2px #060606;
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+input.form, select.form, textarea.form {
+	background-color: rgba(255,255,255,0.1);
+	border: none;
+	position: absolute;
+	height: 23px;
+	font: 18px Arial;
+	padding: 2px 2px 2px 2px;
+	resize: none;
+	font-family: "Agency FB";
+}
+
+input.form:focus, select.form:focus, textarea.form:focus {
+	outline: none !important;
+}
+
+textarea.form {
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+#register-form {
+	/*min-height: 100%;*/
+	/*min-width: 100%;*/
+	background: url("../img/register_2.jpg") no-repeat;
+	background-size: 100%;
+	width: 1000px;
+	margin: 0 auto;
+	display: block;
+	font-family: "Agency FB", Verdana;
+	padding-bottom: 30px;
+}
+
+.invalid, .invalid-email, .invalid-name, .invalid-company, .invalid-phone, .invalid-date {
+	background-color: rgba(255, 0, 0, 0.1) !important;
+}
+
+.debug {
+	display: none;
+	color: transparent;
+	text-size: 0px;
+	height: 0px;
+}
+
+#form-firstname {
+	margin-left: 144px;
+	margin-top: 460px;
+	height: 25px;
+	width: 765px;
+}
+
+#form-invalid {
+	margin-left: -40px;
+	margin-top: 260px;
+	width: 580px;
+	height: 80px;
+	position: absolute;
+	font-size: 32px;
+	font-weight: 900;
+	color: #E00000;
+}
+
+#form-dob {
+	margin-left: 271px;
+	margin-top: 502px;
+	width: 148px;
+	height: 27px;
+}
+
+#form-email {
+	margin-left: 162px;
+	margin-top: 714px;
+	width: 302px;
+}
+
+#form-phone {
+	margin-left: 162px;
+	margin-top: 672px;
+	width: 302px;
+}
+
+#form-phonemobile {
+	margin-left: 662px;
+	margin-top: 672px;
+	width: 302px;
+}
+
+#form-company {
+	margin-left: 284px;
+	margin-top: 755px;
+	width: 310px;
+	height: 25px;
+}
+
+#form-type {
+	margin-left: 718px;
+	margin-top: 755px;
+	width: 150px;
+	height: 25px;
+}
+
+#form-address {
+	margin-left: 318px;
+	margin-top: 588px;
+	width: 300px;
+	height: 70px;
+}
+
+#form-medical {
+	margin-left: 162px;
+	margin-top: 938px;
+	width: 712px;
+	height: 70px;
+}
+
+#form-food {
+	margin-left: 162px;
+	margin-top: 827px;
+	width: 710px;
+	height: 70px;
+}
+
+#form-postcode {
+	margin-left: 796px;
+	margin-top: 586px;
+	width: 148px;
+	height: 26px;
+}
+
+#form-agentID {
+	margin-left: 728px;
+	margin-top: 501px;
+	width: 148px;
+	height: 26px;
+}
+
+#form-ecname {
+	margin-left: 368px;
+	margin-top: 1020px;
+	width: 304px;
+}
+
+#form-ecphone {
+	margin-left: 316px;
+	margin-top: 1061px;
+	width: 304px;
+}
+
+#form-photo {
+	margin-left: 53px;
+	margin-top: 1121px;
+	width: 32px;
+	height: 32px;
+}
+
+#re-captcha-- {
+	margin-left: 386px;
+	margin-top: 297px;
+	width: 200px;
+	height: 80px;
+	border: 5px solid #F0F0F0;
+	background-color: transparent;
+	font-family: "Agency FB";
+	color: #F0F0F0;
+	font-size: 36px;
+	border-radius: 100px;
+	text-shadow: 3px 3px #060606;
+}
+
+#re-captcha--:hover {
+	border: 5px solid #cd3033;
+	color: #cd3033;
+}
+
+#form-agentID-button {
+	margin-left: 306px;
+	margin-top: 100px;
+}

@@ -1,0 +1,30 @@
+First Name | Last Name
+Company | Type
+DOB | Email
+Address | Post Code
+Phone | Mobile
+Medical Details
+Dietery Details
+Emergancy Contact Name | EC Phone
+
+25 * 60 * 8
+
+We collect personal information from you, including information about your:
+
+• Full Name
+• Email Address
+• Address
+• Date of Birth
+• Contact Information
+• Medical/Dietery needs
+
+We collect your personal information in order to:
+
+• Identify individuals and groups attending camp
+• Ensure the safety of all individuals at camp
+
+All required information must be filled in to register for camp. If you choose not to enter required information, we will be unable to accept your camp registration and you will be unable to attend camp. 
+
+We keep your information safe by storing it in an secure, encrypted database and only allowing camp organizers to access this information. After registrations close, registees information will be passed along to their respected Boys' Brigade company or ICONZ unit and to Boys Brigade New Zealand. This information will be passed along in order to collect data on who attends camp. 
+
+You have the right to ask for a copy of any personal information we hold about you, and to ask for it to be corrected if you think it is wrong. If you’d like to ask for a copy of your information, or to have it corrected, please contact us at info@copsandrobberscamp.co.nz. 

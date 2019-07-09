@@ -73,12 +73,12 @@ $loggedIn = isset($_SESSION["email"]);
 $open = true; //So the database doesn't complain that we are using it incorrectly and give us a 403
 global $open;
 
-include_once("../scripts/debug.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/debug.php");
 
 global $debugVal;
 $debugVal = false; //So debug doesn't echo
 
-include_once("../scripts/database.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/database.php");
 
 global $database;
 
@@ -235,7 +235,7 @@ if (!$loggedIn && !verifyTokenQuery()) {
 	return;
 }
 
-include_once("../scripts/commonqueries.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/commonqueries.php");
 
 if (isset($_POST["query"])) {
     $query = $database->real_escape_string($_POST["query"]);

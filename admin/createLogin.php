@@ -2,10 +2,10 @@
 $open = true;
 global $open;
 
-include("../scripts/debug.php");
-include("../scripts/database.php");
-include("../scripts/tokens.php");
-include("../scripts/emails.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/scripts/debug.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/scripts/database.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/scripts/tokens.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/scripts/emails.php");
 
 if (!isReady()) { //If the database is broken. If so... fek
     header("Location: index.php");
@@ -74,9 +74,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $vars = array("firstname" => $firstname, "lastname" => $lastname, "token" => "https://" . $_SERVER["HTTP_HOST"] . "/admin/invite.php?token=" . $token, "email" => $email);
         $message = getEmailFile("admin_creation.txt", $vars); //Gets the email from the admin_creation.txt file
 
-        if (!mail("$firstname $lastname <$email>", "$subject", "$message", "$headers")) {
+        /*if (!mail("$firstname $lastname <$email>", "$subject", "$message", "$headers")) {
             echo "Error: Failed to send mail - " . getLastError()["message"];
-        }
+        }*/
+
+        emailSMTP($email, $subject, $message);
     }
 
 } else {

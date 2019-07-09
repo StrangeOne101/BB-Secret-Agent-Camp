@@ -8,8 +8,8 @@ if((!isset($_SERVER["HTTPS"]) || $_SERVER["HTTPS"] != "on") && $_SERVER["HTTP_HO
 $open = true;
 global $open;
 
-include_once("../scripts/debug.php");
-include_once("../scripts/database.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/debug.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/database.php");
 
 $message = "";
 

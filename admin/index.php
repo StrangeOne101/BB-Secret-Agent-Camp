@@ -8,12 +8,12 @@ if(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "on" && $_SERVER["HTTP_HOST"
 $open = true;
 global $open;
 
-include_once("../scripts/debug.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/debug.php");
 
 global $debugVal;
 $debugVal = false;
 
-include_once("../scripts/database.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/database.php");
 
 
 if (isReady()) {
@@ -47,12 +47,12 @@ if (isReady()) {
     //This reads the error_database_admin.html file and echos the content here. It's easier than
     //writing the entire HTML document in this script file, as HTML documents can be
     //rather large.
-    $myfile = fopen("./pages/error_database_admin.html", "r"); //Open the file
+    $myfile = fopen($_SERVER['DOCUMENT_ROOT'] . "/admin/pages/error_database_admin.html", "r"); //Open the file
     if ($myfile == null) {
         echo "Something went really wrong!"; //o shit son
         return "";
     }
-    echo str_replace('$errors', getErrors(), fread($myfile,filesize("./pages/error_database_admin.html"))); //Echo the data, and fill in the errors
+    echo str_replace('$errors', getErrors(), fread($myfile,filesize($_SERVER['DOCUMENT_ROOT'] . "/admin/pages/error_database_admin.html"))); //Echo the data, and fill in the errors
     fclose($myfile); //Because we are a tidy kiwi
 }
 
@@ -124,12 +124,12 @@ function loadPage($pageName, $pageFilename, $glyph, $cssFileName, $jsFileName) {
     global $pages; //Get the array
 
     //Open the located file
-    $myfile = fopen("./pages/" . $pageFilename, "r"); //Open the file
+    $myfile = fopen($_SERVER['DOCUMENT_ROOT'] . "/admin/pages/" . $pageFilename, "r"); //Open the file
     if ($myfile == null) {
         debug("A page has been misplaced! " . $pageFilename . " couldn't be found!");
         return "";
     }
-    $page = new AdminPage($pageName, fread($myfile,filesize("./pages/" . $pageFilename)), $glyph, $cssFileName, $jsFileName);
+    $page = new AdminPage($pageName, fread($myfile,filesize($_SERVER['DOCUMENT_ROOT'] . "/admin/pages/" . $pageFilename)), $glyph, $cssFileName, $jsFileName);
     array_push($pages, $page);
 }
 
@@ -165,12 +165,12 @@ foreach ($pages as &$key) {
 }
 
 //Open the index page. This is where all the HTML for the base page lies.
-$indexPage = fopen("./pages/admin_index.html", "r"); //Open the file
+$indexPage = fopen($_SERVER['DOCUMENT_ROOT'] . "/admin/pages/admin_index.html", "r"); //Open the file
 if ($indexPage == null) {
     echo "Something went really wrong!"; //o shit son
     return "";
 }
-$pageData = fread($indexPage,filesize("./pages/admin_index.html")); //Read the actual data
+$pageData = fread($indexPage,filesize($_SERVER['DOCUMENT_ROOT'] . "/admin/pages/admin_index.html")); //Read the actual data
 $pageData = str_replace("<customjs/>", $jsData, $pageData);   //Replace the JS and CSS custom tags we
 $pageData = str_replace("<customcss/>", $cssData, $pageData); //made and place our js/css in there
 $pageData = str_replace("<customtabs/>", $tabData, $pageData); //Put the tab on the left

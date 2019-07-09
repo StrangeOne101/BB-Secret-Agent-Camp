@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<?php
+session_start();
+
+?><!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -7,8 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Toby Strange (StrangeOne101)">
-	<meta name="robots" content="noindex">
-    <meta name="googlebot" content="noindex">
     
     <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0" />
   	<meta http-equiv="cache-control" content="max-age=0" />
@@ -22,6 +23,7 @@
     <!--  <link href="css/bootstrap.min.css" rel="stylesheet">-->
 
     <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/flier.css">
    	<link href="css/thanks.css" rel="stylesheet">
    	
     <link rel="shortcut icon" href="favicon.ico">
@@ -37,20 +39,23 @@
 </head>
 
 <body>
+    <div id="header-logo">
+        <a href="index.php"><img id="title" src="/img/title.png" width="400px" /></a>
+    </div>
 	<div id="tile">
 		<div class="center" id="title_center">
 			<h1>Thanks for registering!</h1>
-			<?php session_start();
-			
-			if (isset($_SESSION["display-email"])) {
+			<?php
+            if (isset($_SESSION["last_type"]) && $_SESSION["last_type"] >= 4) {
+                echo "<h3>Please get in contact with us to discuss details about camp!</h3>";
+            } else if (isset($_SESSION["display-email"])) {
 			    //echo "You should recieve an email shortly.";
 			    echo "<h4>We've sent an email to <u>" . $_SESSION["display-email"] . "</u>. You should receive it shortly.</h4>";
-			} 
-			else {
+			} else {
 			    echo "<h3>You should receive an email about it shortly.</h3>";
 			}
 			?>
-			<h3>Want to continue registering? Click <a href="/register.php" >here</a>.</h3>
+			<h3>Want to continue registering? Click <a href="/register.php?continue" >here</a>.</h3>
 		</div>
 	</div>
 </body>

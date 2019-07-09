@@ -13,24 +13,24 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") { //GET only
 $open = true; //So the database doesn't complain that we are using it incorrectly and give us a 403
 global $open;
 
-include_once("../scripts/debug.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/debug.php");
 
 global $debugVal;
 $debugVal = false; //So debug doesn't echo
 
-include_once("../scripts/database.php");
-include_once("../scripts/commonqueries.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/database.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/commonqueries.php");
 //Start of the real stuff and not just imports
 
 $lost = false;
 
 function showErrorPage() {
-    $myfile = fopen("./pages/error_database_admin.html", "r"); //Open the file
+    $myfile = fopen($_SERVER['DOCUMENT_ROOT'] . "/admin/pages/error_database_admin.html", "r"); //Open the file
     if ($myfile == null) {
         echo "Something went really wrong!"; //o shit son
         exit();
     }
-    echo str_replace('$errors', getErrors(), fread($myfile,filesize("./pages/error_database_admin.html"))); //Echo the data, and fill in the errors
+    echo str_replace('$errors', getErrors(), fread($myfile,filesize($_SERVER['DOCUMENT_ROOT'] . "/admin/pages/error_database_admin.html"))); //Echo the data, and fill in the errors
     fclose($myfile); //Because we are a tidy kiwi
 }
 

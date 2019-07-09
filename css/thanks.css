@@ -6,8 +6,7 @@
 
 #tile {
 	
-	width: 100%;
-	height: 100%;
+
 }
 
 html {
@@ -33,9 +32,6 @@ body {
 	
 	align-content: center;
 	vertical-align: middle;
-	
-	padding-top: 10%;
-	padding-bottom: 10%;
 }
 
 h1 {
@@ -78,5 +74,9 @@ h4 {
 	color: #FF0000;
 	border: 8px solid #FF0000;
 	text-shadow: 1px 1px #060606;
+}
+
+a, a:visited {
+	color: #feb729;
 }
 

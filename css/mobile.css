@@ -1,0 +1,214 @@
+
+@media only screen and (max-height: 500px) {
+    #logos {
+        visibility: hidden;
+        height: 0px;
+    }
+
+    #title {
+        max-height: 160px;
+        margin-top: 15px;
+        width: auto;
+    }
+
+    h1 {
+        font-size: 50px;
+    }
+
+    h2 {
+        font-size: 36px;
+        margin-top: 15px;
+    }
+
+    h3 {
+        font-size: 24px;
+    }
+
+    h4 {
+        font-size: 20px;
+    }
+
+    #logos > * > img {
+        height: 50px;
+    }
+
+    label {
+        font-size: 18px;
+    }
+
+}
+/*
+  iPhone SE Size
+*/
+@media only screen and (min-width: 300px) and (min-height: 450px) and (max-width: 720px) {
+    #title {
+        max-height: 200px;
+        width: auto;
+        margin-top: 15px;
+    }
+
+    h1 {
+        font-size: 60px;
+    }
+
+    h2 {
+        font-size: 36px;
+        margin-top: 15px;
+    }
+
+    h3 {
+        font-size: 24px;
+    }
+
+    h4 {
+        font-size: 20px;
+    }
+
+    #logos > * > img {
+        height: 50px;
+    }
+
+    label {
+        font-size: 18px;
+    }
+}
+
+/*
+  Larger Phone Sizes
+  Examples are iPhone 6, 7, 8
+*/
+
+@media only screen and (min-width: 350px) and (min-height: 650px) and (max-width: 720px) {
+    #title {
+        max-height: 240px;
+        width: auto;
+    }
+
+    h1 {
+        font-size: 72px;
+    }
+
+    h2 {
+        font-size: 46px;
+        margin-top: 15px;
+        margin-bottom: 0px;
+    }
+
+    h3 {
+        font-size: 28px;
+    }
+
+    h4 {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+
+    #logos > * > img {
+        height: 60px;
+    }
+
+    label {
+        font-size: 22px;
+    }
+}
+
+/*
+   Plus Phone Sizes
+   Examples are iPhone 6+, 7+, 8+
+*/
+@media only screen and (min-width: 400px) and (min-height: 700px) and (max-width: 720px) {
+    #title {
+        max-height: 280px;
+        width: auto;
+    }
+
+    h1 {
+        font-size: 72px;
+    }
+
+    h2 {
+        font-size: 52px;
+        margin-top: 15px;
+        margin-bottom: 0px;
+    }
+
+    h3 {
+        font-size: 32px;
+    }
+
+    h4 {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+    #logos > * > img {
+        height: 70px;
+    }
+
+    label {
+        font-size: 24px;
+    }
+}
+
+/*
+   XL Long Phone Sizes
+   Examples are iPhone X
+*/
+@media only screen and (min-width: 350px) and (min-height: 800px) and (max-width: 720px) {
+    #title {
+        max-height: 260px;
+        margin-top: 80px;
+        margin-bottom: 60px;
+        width: auto;
+    }
+
+    h1 {
+        font-size: 72px;
+    }
+
+    h2 {
+        font-size: 52px;
+        margin-top: 15px;
+        margin-bottom: 0px;
+    }
+
+    h3 {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    h4 {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+    #logos > * > img {
+        height: 60px;
+    }
+
+    label {
+        font-size: 20px;
+    }
+}
+
+@media only screen and (min-width: 720px) { /** Desktop **/
+    body {
+        min-width: 640px;
+        min-height: 720px;
+    }
+}
+
+@media only screen and (min-height: 600px) and (max-height: 850px) and (min-width: 900px) { /** Desktop but smaller screens **/
+    h2 {
+        font-size: 72px;
+        margin-top: 15px;
+        margin-bottom: -20px;
+    }
+
+    h3 {
+        font-size: 36px;
+    }
+
+
+}
+

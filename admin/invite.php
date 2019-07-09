@@ -19,8 +19,8 @@ if (isset($_GET["token"])) {
 $open = true;
 global $open;
 
-include_once("../scripts/debug.php");
-include_once("../scripts/database.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/debug.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/database.php");
 
 if (!isReady()) { //If the database is broken. If so... fek
     header("Location: index.php"); //Shows error message

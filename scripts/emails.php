@@ -10,9 +10,11 @@ we can get back to you.</i>";
 
 global $FOOT_NOTICE;
 
+require $_SERVER['DOCUMENT_ROOT'] . '/class/SMTPMailer.php';
+
 $headers  ='"MIME-Version: 1.0' . PHP_EOL;
 $headers .= 'Content-Type: text/html; charset=ISO-8859-1' . PHP_EOL;
-$headers .= 'From: Space Camp<info@spacecamp.co.nz>' . PHP_EOL;
+$headers .= 'From: Cops and Robbers Camp<info@copsandrobberscamp.co.nz>' . PHP_EOL;
 
 function email($to, $subject, $message) {
     global $headers;
@@ -21,7 +23,21 @@ function email($to, $subject, $message) {
 
 function emailNoHTML($to, $subject, $message) {
 	global $headers;
-	mail($to, $subject, $message, "From: Space Camp<info@spacecamp.co.nz>");
+	mail($to, $subject, $message, "From: Cops and Robbers Camp<info@copsandrobberscamp.co.nz>");
+}
+
+function emailSMTP($to, $subject, $message) {
+
+    $mail = new SMTPMailer();
+
+    $mail->addTo($to);
+    $mail->addBcc("info@copsandrobberscamp.co.nz");
+
+    $mail->Subject($subject);
+    $mail->Body($message);
+    $mail->From("info@copsandrobberscamp.co.nz", "Cops and Robbers Camp");
+
+    return $mail->Send();
 }
 
 function getBrowser()
@@ -129,6 +145,7 @@ function getEmailFile($filename, $variables = array(), $html = true) {
     if (strpos($message, "<html>") == false && strpos($message, "<body>") == false && $html) {
         $message = "<html><body>$message</body></html>";
     }
+
     foreach($variables as $key => $value) {
         $message = str_replace('$' . $key, htmlspecialchars($value), $message);
     }
@@ -144,9 +161,9 @@ function sendErrorEmail($data, $error) {
 	$timezone = 12; //GMT + 12
 
 	$string = "A registration failed at " . date("d/m/y h:iA", strtotime("+$timezone hours")) . ". \r\n\r\nError message: $error \r\n\r\nData dump: \r\n\r\n$data";
-	$email = "info@spacecamp.co.nz";
+	$email = "info@copsandrobberscamp.co.nz";
 
-	$headers = "From: Space Camp <info@spacecamp.co.nz>\r\nCc: strange.toby@gmail.com";
+	$headers = "From: Cops and Robbers Camp <info@copsandrobberscamp.co.nz>\r\nCc: strange.toby@gmail.com";
 
 	$string = wordwrap($string, 70, "\r\n");
 	/*$string .= "\r\n\r\nUser Agent: " . $_SERVER['HTTP_USER_AGENT'] . "\r\n";

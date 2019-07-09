@@ -5,7 +5,7 @@ if (!(isset($open) && $open)) {
 }
 
 
-include_once('debug.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/scripts/debug.php');
 
 $ready = false;
 $database = null;
@@ -18,6 +18,8 @@ $TABLE_TYPES = "tbl_registee_types"; //Type of person registering. Either Child,
 $TABLE_REGISTRATIONS = "tbl_signups_" . (date("Y") - 2000); //tbl_signups_18, etc
 $TABLE_CHANGES = "tbl_changes"; //To log all changes to any database
 $TABLE_PAYMENTS = "tbl_payments"; //Payments and ID of all owing or payed campers/companies. Company IDs are their normal ID * -1
+
+global $TABLE_REGISTRATIONS, $TABLE_COMPANIES, $TABLE_TYPES;
 
 /**
  * Reads the ini file that contains the database connection
@@ -42,13 +44,13 @@ function isDBDataReady() {
     $return = "";
 
     if (!isset($ini_array["hostname"])) {
-        $return .= "Hostname not found;";
+        $return .= "Hostname not found; ";
     }
     if (!isset($ini_array["username"])) {
-        $return .= "Username not found;";
+        $return .= "Username not found; ";
     }
     if (!isset($ini_array["databasename"])) {
-        $return .= "Database name not found;";
+        $return .= "Database name not found; ";
     }
 
     return $return;
@@ -61,15 +63,17 @@ function isDBDataReady() {
  */
 function findConfig() {
 	$ini_array = null;
-	$inipath = "config/database.ini";
+	$inipath = $_SERVER['DOCUMENT_ROOT'] . "/config/database.ini";
 	$pathAdditions = 2;
 
-	while (!file_exists($inipath) && $pathAdditions > 0) { //This loop keeps looking up a directory until we find it
+	/*while (!file_exists($inipath) && $pathAdditions > 0) { //This loop keeps looking up a directory until we find it
 		$inipath = "../" . $inipath;
 		$pathAdditions--;
-	}
+	}*/
 	try {
 		$ini_array = parse_ini_file($inipath);
+
+		if ($ini_array == null) return null;
 	} catch (Exception $e) {
 		return null;
 	}
@@ -126,7 +130,7 @@ if (isDBDataReady() == "" && $database == null) { //If there are no issues AND t
 
             //Table of all companies with basic IDs attached to them. For data saving purposes
             if (!tableExists($TABLE_COMPANIES)) { //Create the base table and insert all companies into it
-                $query = "CREATE TABLE $TABLE_COMPANIES (`CompanyID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `CompanyName` VARCHAR(40), `PayingAsCompany` BOOLEAN DEFAULT FALSE, `Order` INTEGER DEFAULT CompanyID)";
+                $query = "CREATE TABLE $TABLE_COMPANIES (`CompanyID` INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `CompanyName` VARCHAR(40), `PayingAsCompany` BOOLEAN DEFAULT FALSE, `Order` INTEGER DEFAULT 0)";
                 $database->query($query);
                 $query = "INSERT INTO $TABLE_COMPANIES (`CompanyName`) VALUES ('1st Ashburton'), ('1st Blenheim'), ('1st Christchurch'), ('2nd Christchurch'), ('4th Christchurch'), ('8th Christchurch'), ('14th Christchurch'), ('1st Rangiora'), ('2nd Rangiora'), "
                     . "('3rd Timaru'), ('1st Waimate'), ('Hornby ICONZ'), ('Lincoln ICONZ'), ('Oxford ICONZ'), ('Richmond ICONZ'), ('St Albans ICONZ'), ('Parklands ICONZ'), ('Westside ICONZ')";
