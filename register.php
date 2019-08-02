@@ -319,7 +319,43 @@ if (empty($agentID)) {
 //2 = name
 //3 = company
 
-function validate($input, $type = 0) {
+/**
+ * @param $input The input
+ * @param int $type The type of validation. Default is 0 - which is not empty
+ * @param array $otherinputs An array of other inputs to test at the same time. Optional
+ */
+function validate($input, $type = 0, $otherinputs = array()) {
+    global $companiesById;
+    if (!$GLOBALS['validating']) {
+        echo "class=\"form-control\"";
+        return;
+    }
+
+    //Merge the input variable into the array of other inputs (defaults to empty array)
+    //Then loop over all inputs that we are testing
+    foreach (array_merge(array($input), $otherinputs) as $item) {
+        $output = "class=\"form-control ";
+        if ($type == 1 && !filter_var($item, FILTER_VALIDATE_EMAIL)) {
+            $output = $output . "invalid-email is-invalid";//Append
+            break;
+        } else if ($type == 2 && !preg_match("/\w.*\s.*\w/", $item)) {
+            $output = $output . "invalid-name is-invalid";
+            break;
+        } else if ($type == 3 && !isset($companiesById[$item])) {
+            $output = $output . "invalid-company is-invalid";
+            break;
+        }else if ($item == null || $item == "") {
+            $output = $output . "invalid is-invalid";
+            break;
+        }
+    }
+
+    $output = $output . "\"";
+
+    echo $output;
+}
+
+function validate_or($input, $input2, $type = 0) {
     global $companiesById;
     if (!$GLOBALS['validating']) {
         echo "class=\"form-control\"";
@@ -327,18 +363,17 @@ function validate($input, $type = 0) {
     }
 
     $output = "class=\"form-control ";
-    if ($type == 1 && !filter_var($input, FILTER_VALIDATE_EMAIL)) {
+    if ($type == 1 && !(filter_var($input, FILTER_VALIDATE_EMAIL) || filter_var($input2, FILTER_VALIDATE_EMAIL))) {
         $output = $output . "invalid-email is-invalid";//Append
-    } else if ($type == 2 && !preg_match("/\w.*\s.*\w/", $input)) {
+    } else if ($type == 2 && !(preg_match("/\w.*\s.*\w/", $input) || preg_match("/\w.*\s.*\w/", $input2))) {
         $output = $output . "invalid-name is-invalid";
-    } else if ($type == 3 && !isset($companiesById[$input])) {
+    } else if ($type == 3 && !(isset($companiesById[$input2]) || isset($companiesById[$input2]))) {
         $output = $output . "invalid-company is-invalid";
-    }else if ($input == null || $input == "") {
+    }else if (($input == null || $input == "") && ($input2 == null || $input2 == "")) {
         $output = $output . "invalid is-invalid";
     }
 
     $output = $output . "\"";
-
 
     echo $output;
 }
@@ -493,11 +528,11 @@ function checkCaptcha($key) {
             <div class="form-group row">
                 <div class="col col-lg-6">
                     <label for="form-phone">Phone Number</label>
-                    <input id="form-phone" <?php validate($phone)?> name="phone" type="text" value="<?php echo $phone?>" maxlength="15">
+                    <input id="form-phone" class="form-control" name="phone" type="text" value="<?php echo $phone?>" maxlength="15">
                 </div>
                 <div class="col col-lg-6">
                     <label for="form-phonemobile">Mobile Number</label>
-                    <input id="form-phonemobile" <?php validate($phonemobile)?> name="phonemobile" type="text" value="<?php echo $phonemobile?>" maxlength="15">
+                    <input id="form-phonemobile" <?php validate_or($phone, $phonemobile)?> name="phonemobile" type="text" value="<?php echo $phonemobile?>" maxlength="15">
 
                 </div>
             </div>

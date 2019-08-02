@@ -1,5 +1,5 @@
 google.charts.setOnLoadCallback(function() {
-	var query = "SELECT tbl_registee_types.TypeName, COUNT(tbl_signups_19.RegisteeType) as `Number` FROM `tbl_signups_18` INNER JOIN tbl_registee_types ON tbl_signups_19.RegisteeType = tbl_registee_types.TypeID GROUP BY tbl_signups_19.RegisteeType";
+	var query = "SELECT tbl_registee_types.TypeName, COUNT(tbl_signups_19.RegisteeType) as `Number` FROM `tbl_signups_19` INNER JOIN tbl_registee_types ON tbl_signups_19.RegisteeType = tbl_registee_types.TypeID GROUP BY tbl_signups_19.RegisteeType";
 	convertCSVToPieChart(query, "Types of Registrations", "statistics_typeNumbers", false);
 
 	query = "SELECT tbl_companies.CompanyName, COUNT(tbl_signups_19.CompanyUnit) FROM `tbl_signups_19` INNER JOIN tbl_companies ON tbl_signups_19.CompanyUnit = tbl_companies.CompanyID WHERE tbl_signups_19.RegisteeType = 1 GROUP BY CompanyName";

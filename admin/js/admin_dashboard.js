@@ -10,7 +10,7 @@ google.charts.setOnLoadCallback(function() {
 $.post("dbquery.php", {
 	queryno: 2 //Common query no. 3 - Get all recent registration data
 }, function(data,status) {
-	$("#registrationData_recents").html(data);
+	$("#registrationData_recents").html(data.data);
 
 	var table = $("#registrationData_recents").children("table")[0];
 	shortenLongFields(table);

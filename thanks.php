@@ -38,7 +38,7 @@ session_start();
     
 </head>
 
-<body>
+<body style="min-width: 1000px; min-height: 600px;">
     <div id="header-logo">
         <a href="index.php"><img id="title" src="/img/title.png" width="400px" /></a>
     </div>
