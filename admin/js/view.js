@@ -13,7 +13,7 @@ $(document).ready(function() {
 			}
 
             let csvContent = "data:text/csv;charset=utf-8," + data["data"];
-            var encodedUri = encodeURI(csvContent);
+            var encodedUri = encodeURI(csvContent).replace(/#/g, "%23");
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
             let date = new Date();

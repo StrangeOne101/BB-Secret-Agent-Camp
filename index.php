@@ -23,9 +23,8 @@ if(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "on" && $_SERVER["HTTP_HOST"
 
     <h3 id="header">BOYS' BRIGADE AND ICONZ PRESENTS</h3>
     <img id="title" src="img/title.png" alt="Cops and Robbers Camp"/>
-    <h2>16 - 18 AUGUST  2019</h2>
-    <h3 style=""><a href="register.php">Click here to register!</a></h3>
-    <h4>TEAM SECTION AND ICONZ ADVENTURE</h4>
+    <h2 style="">Thanks for coming!</h2>
+    <h3>Photos will be up in the next few days!</h3>
 
     <div id="footer" class="bottom-container">
         <div class="bottom">
