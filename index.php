@@ -53,22 +53,46 @@ include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/gallery_functions.php");
             <li data-target="#carouselFeaturedPhotos" data-slide-to="0" class="active"></li>
             <li data-target="#carouselFeaturedPhotos" data-slide-to="1"></li>
             <li data-target="#carouselFeaturedPhotos" data-slide-to="2"></li>
+            <li data-target="#carouselFeaturedPhotos" data-slide-to="3"></li>
+            <li data-target="#carouselFeaturedPhotos" data-slide-to="4"></li>
         </ol>
         <div class="carousel-inner">
             <div class="carousel-item active" data-interval="8000">
-                <img src="https://i.imgur.com/fdSJKLY.jpg" class="d-block w-100 featuredImage" alt="...">
+                <a href="/img/gallery/20190817-MJ_P0616.jpg" data-fancybox="featured" class="fancybox" rel="featured">
+                    <img src="/img/gallery/20190817-MJ_P0616.jpg" class="d-block w-100 featuredImage" alt="...">
+                </a>
                 <div class="carousel-caption d-none d-md-block">
                     <p></p>
                 </div>
             </div>
             <div class="carousel-item" data-interval="8000">
-                <img src="https://i.imgur.com/bPnWl8T.jpg" class="d-block w-100 featuredImage" alt="...">
+                <a href="/img/gallery/20190817-MJ_P0208.jpg" data-fancybox="featured" class="fancybox" rel="featured">
+                    <img src="/img/gallery/20190817-MJ_P0208.jpg" class="d-block w-100 featuredImage" alt="...">
+                </a>
                 <div class="carousel-caption d-none d-md-block">
                     <p></p>
                 </div>
             </div>
             <div class="carousel-item" data-interval="8000">
-                <img src="https://i.imgur.com/gLUdY3e.jpg" class="d-block w-100 featuredImage" alt="...">
+                <a href="/img/gallery/20190807-DB_00091.JPG" data-fancybox="featured" class="fancybox" rel="featured">
+                    <img src="/img/gallery/20190807-DB_00091.JPG" class="d-block w-100 featuredImage" alt="...">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                    <p></p>
+                </div>
+            </div>
+            <div class="carousel-item" data-interval="8000">
+                <a href="/img/gallery/20190817-MJ_P0729.jpg" data-fancybox="featured" class="fancybox" rel="featured">
+                    <img src="/img/gallery/20190817-MJ_P0729.jpg" class="d-block w-100 featuredImage" alt="...">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                    <p></p>
+                </div>
+            </div>
+            <div class="carousel-item" data-interval="8000">
+                <a href="/img/gallery/20190818-MJ_P0966.jpg" data-fancybox="featured" class="fancybox" rel="featured">
+                    <img src="/img/gallery/20190818-MJ_P0966.jpg" class="d-block w-100 featuredImage" alt="...">
+                </a>
                 <div class="carousel-caption d-none d-md-block">
                     <p></p>
                 </div>
@@ -84,9 +108,10 @@ include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/gallery_functions.php");
         </a>
     </div>
 
-    <div id="gallery-parent" style="margin-top: 40px">
+    <h4 style="margin-top: 40px">Click to enlarge images!</h4>
+    <div id="gallery-parent">
         <?php //Generate the gallery
-        $image_files = get_files($images_dir);
+        /*$image_files = get_files($images_dir);
         if(count($image_files)) {
             $index = 0;
             foreach($image_files as $index=>$file) {
@@ -105,8 +130,14 @@ include_once($_SERVER['DOCUMENT_ROOT'] . "/scripts/gallery_functions.php");
         }
         else {
             echo '<p>There are no images in this gallery.</p>';
-        }
+        }*/
+
+        $myfile = fopen($_SERVER['DOCUMENT_ROOT'] . "/gallery_data.txt", "r");
+        echo fread($myfile,filesize($_SERVER['DOCUMENT_ROOT'] . "/gallery_data.txt"));
+        fclose($myfile);
+
         ?>
+        <div class="clear"></div>
 
     </div>
 

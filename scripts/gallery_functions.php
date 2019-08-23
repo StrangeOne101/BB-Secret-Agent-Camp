@@ -35,10 +35,28 @@ if ($captions_file) {
 if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $images_dir)) mkdir($_SERVER['DOCUMENT_ROOT'] . $images_dir);
 if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $thumbs_dir)) mkdir($_SERVER['DOCUMENT_ROOT'] . $thumbs_dir);
 
+function endsWith($haystack, $needle)
+{
+    $length = strlen($needle);
+    if ($length == 0) {
+        return true;
+    }
+
+    return (substr($haystack, -$length) === $needle);
+}
+
 /* function:  generates thumbnail */
 function make_thumb($src,$dest,$desired_max) {
     /* read the source image */
-    $source_image = imagecreatefromjpeg($_SERVER['DOCUMENT_ROOT'] . $src);
+    $source_image = null;
+
+    if (endsWith(strtolower($src), ".jpg") || endsWith(strtolower($src), ".jpeg")) $source_image = imagecreatefromjpeg($_SERVER['DOCUMENT_ROOT'] . $src);
+    else if (endsWith(strtolower($src), ".png")) $source_image = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'] . $src);
+    else if (endsWith(strtolower($src), ".bmp")) $source_image = imagecreatefrombmp($_SERVER['DOCUMENT_ROOT'] . $src);
+    else if (endsWith(strtolower($src), ".gif")) $source_image = imagecreatefromgif($_SERVER['DOCUMENT_ROOT'] . $src);
+    else return;
+
+
     $width = imagesx($source_image);
     $height = imagesy($source_image);
     /* find the "desired height" of this thumbnail, relative to the desired width  */
@@ -52,13 +70,13 @@ function make_thumb($src,$dest,$desired_max) {
 
     /* create a new, "virtual" image */
     $virtual_image = imagecreatetruecolor($desired_width,$desired_height);
-    debug($virtual_image);
-    debug("Break in between");
     /* copy source image at a resized size */
     imagecopyresized($virtual_image,$source_image,0,0,0,0,$desired_width,$desired_height,$width,$height);
-    debug($virtual_image);
     /* create the physical thumbnail image to its destination */
     imagejpeg($virtual_image, $_SERVER['DOCUMENT_ROOT'] . $dest);
+
+    unset($virtual_image);
+    unset($source_image);
 }
 
 /* function: returns caption for image file */
@@ -74,7 +92,7 @@ function get_caption($file) {
 }
 
 /* function:  returns files from dir */
-function get_files($images_dir,$exts = array('jpg', 'png', 'jpeg')) {
+function get_files($images_dir,$exts = array('jpg', 'jpeg', 'png', 'gif', 'bmp')) {
     $files = array();
     if($handle = opendir($_SERVER['DOCUMENT_ROOT'] . $images_dir)) {
         while(false !== ($file = readdir($handle))) {

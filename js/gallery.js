@@ -5,7 +5,6 @@
  */
 function preloadImage(url) {
 	if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg")) {
-		console.log("Preloading " + url);
 		$.get(url);
 	}
 }
