@@ -4,7 +4,7 @@
 
 .clear			{ clear:both; }
 /*.photo-link		{ padding:5px; margin:5px; border:1px solid #ccc; display:block; width:200px; float:left; }*/
-.photo-link		{ padding:5px; margin:15px; display:block; width:200px; float:left; }
+.photo-link		{ padding:5px; margin:15px; display:block; width:400px; float:left; }
 /*.photo-link:hover	{ border-color:#999; }*/
 
 
@@ -15,7 +15,7 @@
 
 img.zoom {
     height: 100%;
-    width: 200px;
+    width: 380px;
     object-fit:cover;
     -webkit-transition: all .3s ease-in-out;
     -moz-transition: all .3s ease-in-out;
@@ -24,10 +24,10 @@ img.zoom {
 }
 
 .transition {
-    -webkit-transform: scale(1.2);
-    -moz-transform: scale(1.2);
-    -o-transform: scale(1.2);
-    transform: scale(1.2);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
 }
 .modal-header {
 
